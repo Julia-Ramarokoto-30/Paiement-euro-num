@@ -33,6 +33,7 @@
     .status { display:flex; align-items:center; min-height:46px; margin:14px 0; padding:11px 13px; border-radius:8px; background:#e8f7f1; color:var(--ok); font-weight:900; }
     .status.waiting { background:#fff7e6; color:var(--wait); }
     .status.neutral { background:#edf4ff; color:var(--blue); }
+    .status.refused { background:#fff1f3; color:#b42318; }
     .eu-star-loader { position:relative; flex:0 0 auto; width:28px; height:28px; margin-right:10px; animation:spinStars 1.4s linear infinite; }
     .eu-star-loader span { position:absolute; left:50%; top:50%; color:#f5c542; font-size:8px; line-height:1; transform:rotate(calc(var(--i) * 30deg)) translateY(-11px); transform-origin:0 0; }
     .eu-star-loader.large { width:86px; height:86px; margin:0 auto 16px; }
@@ -108,14 +109,28 @@
     let support = "phone";
     let saleIndex = 0;
     let acceptedQueued = false;
+    let paymentRefused = false;
     const clientScreen = document.querySelector("#clientScreen");
     const merchantScreen = document.querySelector("#merchantScreen");
     const clientSupportLabel = document.querySelector("#clientSupportLabel");
     const money = value => value.toLocaleString("fr-FR", { style:"currency", currency:"EUR" });
-    const current = () => flowBase[step];
+    function current() {
+      if (paymentRefused) {
+        return {
+          clientStatus:"Paiement refusé",
+          merchantStatus:"Paiement refusé",
+          merchantTitle:"Paiement refusé",
+          merchantText:"Le solde de la puce e-euro offline est insuffisant pour accepter cette vente.",
+          title:"Solde puce insuffisant",
+          text:"Paiement refusé.",
+          refused:true
+        };
+      }
+      return flowBase[step];
+    }
     const currentSale = () => sales[saleIndex];
     const currentSupport = () => supports[support];
-    const statusClass = state => state.accepted ? "status" : step === 1 ? "status neutral" : "status waiting";
+    const statusClass = state => state.refused ? "status refused" : state.accepted ? "status" : step === 1 ? "status neutral" : "status waiting";
 
     function getOfflineBalance() {
       const storedBalance = Number(localStorage.getItem(offlineBalanceKey));
@@ -132,12 +147,12 @@
     }
 
     function statusContent(text) {
-      if (step !== 1) return text;
+      if (paymentRefused || step !== 1) return text;
       return `${starRing()}<span>${text}</span>`;
     }
 
     function offlineSettlementVisual() {
-      if (step !== 1) return "";
+      if (paymentRefused || step !== 1) return "";
       return `
         <div class="settlement-panel" aria-label="Validation du paiement en cours">
           ${starRing("large")}
@@ -164,13 +179,14 @@
       const balance = getOfflineBalance();
       const title = state.title || s.title;
       const text = state.accepted ? `${sale.label} - ${money(sale.amount)}` : state.text || (step === 0 ? s.intro : s.progress);
+      const nextButtonLabel = state.refused || state.accepted ? "Nouvelle vente" : "Continuer";
       clientScreen.innerHTML = `
-        <div class="wallet-card"><div class="label">${s.reserve}</div><div class="amount">${money(balance)}</div><div>Support : ${s.label}</div></div>
+        <div class="wallet-card"><div class="label">Solde puce e-euro offline</div><div class="amount">${money(balance)}</div><div>Support : ${s.label}</div></div>
         <div class="${statusClass(state)}">${statusContent(state.clientStatus)}</div>
         ${state.visual ? offlineVisual() : ""}
         ${offlineSettlementVisual()}
         <div class="card"><strong>${state.accepted ? s.ticket : title}</strong><p>${text}</p></div>
-        <div class="actions"><button class="secondary" type="button" data-action="back">Retour</button><button class="primary" type="button" data-action="next">${state.accepted ? "Nouvelle vente" : "Continuer"}</button></div>
+        <div class="actions"><button class="secondary" type="button" data-action="back">Retour</button><button class="primary" type="button" data-action="next">${nextButtonLabel}</button></div>
       `;
     }
 
@@ -178,6 +194,7 @@
       const state = current();
       const s = currentSupport();
       const sale = currentSale();
+      const nextButtonLabel = state.refused || state.accepted ? "Nouvelle vente" : "Continuer";
       merchantScreen.innerHTML = `
         <div class="merchant-total">${brandLogo()}<div class="label">Montant</div><div class="amount">${money(sale.amount)}</div><strong>${sale.label}</strong></div>
         <div class="offline-sync" aria-label="Ventes offline en attente de synchronisation"><div><span>File offline TPE</span><strong>${offlinePending.count} vente${offlinePending.count > 1 ? "s" : ""} à synchroniser</strong><em>${offlinePending.count === 0 ? "File vidée" : state.accepted ? "Paiement ajouté à la file locale" : "Connexion réseau indisponible"}</em></div><div class="offline-amount">${money(offlinePending.amount)}</div><button class="clear-offline" type="button" data-action="clear-offline" ${offlinePending.count === 0 ? "disabled" : ""}>Vider les transactions offline</button></div>
@@ -185,8 +202,8 @@
         ${state.visual ? offlineVisual() : ""}
         ${offlineSettlementVisual()}
         <div class="card"><strong>${state.merchantTitle}</strong><p>${state.merchantText}</p></div>
-        <div class="ticket" aria-label="Ticket commerçant"><div class="ticket-row"><span>Marchand</span><strong>${sale.merchant}</strong></div><div class="ticket-row"><span>Article</span><strong>${sale.article}</strong></div><div class="ticket-row"><span>Montant</span><strong>${money(sale.amount)}</strong></div><div class="ticket-row"><span>Rail</span><strong>${s.rail}</strong></div><div class="ticket-row"><span>Statut</span><strong>${state.accepted ? "ACCEPTÉ LOCAL" : "EN COURS"}</strong></div><div class="ticket-row"><span>Ref.</span><strong>${sale.reference}</strong></div></div>
-        <div class="actions"><button class="secondary" type="button" data-action="back">Retour</button><button class="primary" type="button" data-action="next">${state.accepted ? "Nouvelle vente" : "Continuer"}</button></div>
+        <div class="ticket" aria-label="Ticket commerçant"><div class="ticket-row"><span>Marchand</span><strong>${sale.merchant}</strong></div><div class="ticket-row"><span>Article</span><strong>${sale.article}</strong></div><div class="ticket-row"><span>Montant</span><strong>${money(sale.amount)}</strong></div><div class="ticket-row"><span>Rail</span><strong>${s.rail}</strong></div><div class="ticket-row"><span>Statut</span><strong>${state.accepted ? "ACCEPTÉ LOCAL" : state.refused ? "REFUSÉ" : "EN COURS"}</strong></div><div class="ticket-row"><span>Ref.</span><strong>${sale.reference}</strong></div></div>
+        <div class="actions"><button class="secondary" type="button" data-action="back">Retour</button><button class="primary" type="button" data-action="next">${nextButtonLabel}</button></div>
       `;
     }
 
@@ -198,6 +215,12 @@
     function queueAcceptedPayment() {
       if (acceptedQueued) return;
       const sale = currentSale();
+      if (getOfflineBalance() < sale.amount) {
+        paymentRefused = true;
+        step = flowBase.length - 1;
+        render();
+        return;
+      }
       offlinePending.count += 1;
       offlinePending.amount += sale.amount;
       setOfflineBalance(getOfflineBalance() - sale.amount);
@@ -206,12 +229,13 @@
     function resetSaleFlow() {
       step = 0;
       acceptedQueued = false;
+      paymentRefused = false;
     }
     function advanceSale() {
       saleIndex = (saleIndex + 1) % sales.length;
     }
     function next() {
-      if (step === flowBase.length - 1) {
+      if (paymentRefused || step === flowBase.length - 1) {
         advanceSale();
         resetSaleFlow();
       } else {
@@ -220,7 +244,15 @@
       }
       render();
     }
-    function back() { step = Math.max(0, step - 1); render(); }
+    function back() {
+      if (paymentRefused) {
+        resetSaleFlow();
+        render();
+        return;
+      }
+      step = Math.max(0, step - 1);
+      render();
+    }
     function setSupport(nextSupport) { support = nextSupport; resetSaleFlow(); render(); }
     function clearOfflineTransactions() { offlinePending.count = 0; offlinePending.amount = 0; render(); }
     document.addEventListener("click", event => {
