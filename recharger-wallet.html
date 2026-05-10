@@ -256,13 +256,15 @@
           Montant de recharge offline
           <input id="offlineTopupAmount" name="offlineAmount" type="number" min="1" step="0.01" value="25" inputmode="decimal" required>
         </label>
-        <div class="limit"><span>Plafond puce offline</span><strong>3 000 €</strong></div>
+        <div class="limit"><span>Plafond puce offline</span><strong>300 €</strong></div>
+        <p class="helper">Ce plafond n'est pas encore défini par la BCE.</p>
         <button id="offlineSubmitButton" type="submit">Recharger la puce e-euro</button>
       </form>
     </section>
   </main>
   <script>
     const maxBalance = 3000;
+    const maxOfflineBalance = 300;
     const walletBalanceKey = "eeurWalletBalance";
     const offlineBalanceKey = "eeurOfflineChipBalance";
     const defaultWalletBalance = 184.60;
@@ -319,9 +321,9 @@
         showStatus("Saisissez un solde offline positif.", true);
         return;
       }
-      const limited = nextBalance > maxBalance;
-      saveOfflineBalance(limited ? maxBalance : nextBalance);
-      showStatus(limited ? "Votre solde ne peut exceder 3000 euros." : `Puce e-euro offline modifiée à ${money(offlineBalance)}.`, limited);
+      const limited = nextBalance > maxOfflineBalance;
+      saveOfflineBalance(limited ? maxOfflineBalance : nextBalance);
+      showStatus(limited ? "Votre puce ne peut exceder 300 euros." : `Puce e-euro offline modifiée à ${money(offlineBalance)}.`, limited);
     });
 
     document.querySelector("#topupForm").addEventListener("submit", event => {
@@ -362,12 +364,12 @@
 
       setTimeout(() => {
         const nextBalance = offlineBalance + amount;
-        const limited = nextBalance > maxBalance;
-        saveOfflineBalance(limited ? maxBalance : nextBalance);
+        const limited = nextBalance > maxOfflineBalance;
+        saveOfflineBalance(limited ? maxOfflineBalance : nextBalance);
         offlineSubmitButton.disabled = false;
         offlineSubmitButton.textContent = "Recharger la puce e-euro";
         if (limited) {
-          showStatus("Votre solde ne peut exceder 3000 euros.", true);
+          showStatus("Votre puce ne peut exceder 300 euros.", true);
           return;
         }
         showStatus(`Puce e-euro offline rechargée de ${money(amount)}.`);
