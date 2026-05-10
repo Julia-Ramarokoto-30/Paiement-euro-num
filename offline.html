@@ -85,7 +85,7 @@
     </section>
   </main>
   <script>
-    const sale = { merchant:"Transavia", amount:89.90, label:"Achat Transavia", brand:"transavia", reference:"OFF-EUR-240426-03", alias:"MRC-8F3A-214C" };
+    const sale = { merchant:"Transavia", amount:65.00, label:"Achat Transavia", brand:"transavia", reference:"OFF-EUR-240426-03", alias:"MRC-8F3A-214C" };
     const offlinePending = { count:4, amount:60.20 };
     const supports = {
       phone: { label:"Téléphone NFC", short:"téléphone", reserve:"Réserve e-EUR mobile", balance:184.20, title:"Paiement NFC hors ligne", intro:"Le téléphone contient une réserve e-EUR prête à payer hors ligne.", progress:"Paiement en cours de validation.", ticket:"Ticket téléphone NFC", rail:"e-EUR hors ligne / NFC" },
@@ -94,7 +94,7 @@
     const flowBase = [
       { clientStatus:"Présenter le support au TPE", merchantStatus:"Mode hors ligne actif", merchantTitle:"Attente support", merchantText:"Aucune connexion réseau nécessaire pour accepter le paiement.", visual:true },
       { clientStatus:"Validation du paiement", merchantStatus:"Validation en cours", title:"Paiement en cours", merchantTitle:"Contrôle hors ligne", merchantText:"Le paiement est contrôlé localement, sans connexion réseau." },
-      { clientStatus:"Paiement accepté", merchantStatus:"Accepté - synchro en attente", text:"Achat Transavia - 89,90 €", merchantTitle:"Vente acceptée localement", merchantText:"La vente est ajoutée aux paiements hors ligne et sera transmise à la reconnexion.", accepted:true }
+      { clientStatus:"Paiement accepté", merchantStatus:"Accepté - synchro en attente", text:"Achat Transavia - 65,00 €", merchantTitle:"Vente acceptée localement", merchantText:"La vente est ajoutée aux paiements hors ligne et sera transmise à la reconnexion.", accepted:true }
     ];
     let step = 0;
     let support = "phone";
@@ -163,7 +163,7 @@
         ${state.visual ? offlineVisual() : ""}
         ${offlineSettlementVisual()}
         <div class="card"><strong>${state.merchantTitle}</strong><p>${state.merchantText}</p></div>
-        <div class="ticket" aria-label="Ticket commerçant"><div class="ticket-row"><span>Marchand</span><strong>${sale.merchant}</strong></div><div class="ticket-row"><span>Montant</span><strong>${money(sale.amount)}</strong></div><div class="ticket-row"><span>Rail</span><strong>${s.rail}</strong></div><div class="ticket-row"><span>Statut</span><strong>${state.accepted ? "ACCEPTÉ LOCAL" : "EN COURS"}</strong></div><div class="ticket-row"><span>Ref.</span><strong>${sale.reference}</strong></div></div>
+        <div class="ticket" aria-label="Ticket commerçant"><div class="ticket-row"><span>Marchand</span><strong>${sale.merchant}</strong></div><div class="ticket-row"><span>Article</span><strong>Parfum Miss Dior</strong></div><div class="ticket-row"><span>Montant</span><strong>${money(sale.amount)}</strong></div><div class="ticket-row"><span>Rail</span><strong>${s.rail}</strong></div><div class="ticket-row"><span>Statut</span><strong>${state.accepted ? "ACCEPTÉ LOCAL" : "EN COURS"}</strong></div><div class="ticket-row"><span>Ref.</span><strong>${sale.reference}</strong></div></div>
         <div class="actions"><button class="secondary" type="button" data-action="back">Retour</button><button class="primary" type="button" data-action="next">${state.accepted ? "Nouvelle vente" : "Continuer"}</button></div>
       `;
     }
