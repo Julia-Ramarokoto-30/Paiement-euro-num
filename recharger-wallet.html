@@ -301,6 +301,7 @@
         </label>
         <div class="limit"><span>Plafond puce offline</span><strong>300 €</strong></div>
         <p class="helper">(plafond non encore défini par la BCE)</p>
+        <div class="status" id="offlineStatus" role="status" aria-live="polite"></div>
         <button id="offlineSubmitButton" type="submit">Recharger la puce e-euro</button>
       </form>
     </section>
@@ -324,10 +325,16 @@
     const submitButton = document.querySelector("#submitButton");
     const offlineAmountInput = document.querySelector("#offlineTopupAmount");
     const offlineSubmitButton = document.querySelector("#offlineSubmitButton");
+    const offlineStatusNode = document.querySelector("#offlineStatus");
 
     function showStatus(message, error = false) {
       statusNode.textContent = message;
       statusNode.className = `status show${error ? " error" : ""}`;
+    }
+
+    function showOfflineStatus(message, error = false) {
+      offlineStatusNode.textContent = message;
+      offlineStatusNode.className = `status show${error ? " error" : ""}`;
     }
 
     function saveBalance(nextBalance) {
@@ -361,12 +368,12 @@
       const nextBalance = Number(offlineBalanceInput.value);
       if (!Number.isFinite(nextBalance) || nextBalance < 0) {
         offlineBalanceInput.value = offlineBalance.toFixed(2);
-        showStatus("Saisissez un solde offline positif.", true);
+        showOfflineStatus("Saisissez un solde offline positif.", true);
         return;
       }
       const limited = nextBalance > maxOfflineBalance;
       saveOfflineBalance(limited ? maxOfflineBalance : nextBalance);
-      showStatus(limited ? "Votre puce ne peut exceder 300 euros." : `Puce e-euro offline modifiée à ${money(offlineBalance)}.`, limited);
+      showOfflineStatus(limited ? "Votre puce ne peut exceder 300 euros." : `Puce e-euro offline modifiée à ${money(offlineBalance)}.`, limited);
     });
 
     document.querySelector("#topupForm").addEventListener("submit", event => {
@@ -398,12 +405,12 @@
       event.preventDefault();
       const amount = Number(offlineAmountInput.value);
       if (!Number.isFinite(amount) || amount <= 0) {
-        showStatus("Saisissez un montant offline supérieur à 0 €.", true);
+        showOfflineStatus("Saisissez un montant offline supérieur à 0 €.", true);
         return;
       }
       offlineSubmitButton.disabled = true;
       offlineSubmitButton.textContent = "Recharge offline en cours";
-      showStatus("Recharge de la puce e-euro offline");
+      showOfflineStatus("Recharge de la puce e-euro offline");
 
       setTimeout(() => {
         const nextBalance = offlineBalance + amount;
@@ -412,10 +419,10 @@
         offlineSubmitButton.disabled = false;
         offlineSubmitButton.textContent = "Recharger la puce e-euro";
         if (limited) {
-          showStatus("Votre puce ne peut exceder 300 euros.", true);
+          showOfflineStatus("Votre puce ne peut exceder 300 euros.", true);
           return;
         }
-        showStatus(`Puce e-euro offline rechargée de ${money(amount)}.`);
+        showOfflineStatus(`Puce e-euro offline rechargée de ${money(amount)}.`);
       }, 1200);
     });
   </script>
