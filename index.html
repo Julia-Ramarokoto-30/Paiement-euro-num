@@ -162,6 +162,30 @@
       font-weight: 900;
     }
 
+    .eu-star-loader {
+      position: relative;
+      flex: 0 0 auto;
+      width: 28px;
+      height: 28px;
+      margin-right: 10px;
+      animation: spinStars 1.4s linear infinite;
+    }
+
+    .eu-star-loader span {
+      position: absolute;
+      left: 50%;
+      top: 50%;
+      color: #f5c542;
+      font-size: 8px;
+      line-height: 1;
+      transform: rotate(calc(var(--i) * 30deg)) translateY(-11px);
+      transform-origin: 0 0;
+    }
+
+    @keyframes spinStars {
+      to { transform: rotate(360deg); }
+    }
+
     .status.waiting { background: #fff7e6; color: var(--wait); }
     .status.neutral { background: #edf4ff; color: var(--blue); }
 
@@ -430,12 +454,12 @@
           rail: "e-EUR / QR / AXIS"
         },
         {
-          clientStatus: "Confirmer 12,40 €",
-          merchantStatus: "Paiement en cours",
+          clientStatus: "Règlement e-EUR en cours",
+          merchantStatus: "Validation PSP client / DESP",
           clientTitle: sale.merchant,
-          clientText: "Formule déjeuner - 12,40 €",
-          merchantTitle: "En attente de validation",
-          merchantText: "Le client confirme dans son wallet.",
+          clientText: "Le wallet transmet l'ordre de paiement.",
+          merchantTitle: "Routage et règlement",
+          merchantText: "AXIS route la demande. Le PSP client transmet l'ordre au DESP.",
           showQrClient: false,
           showQrMerchant: false,
           rail: "e-EUR / QR / AXIS"
@@ -466,12 +490,12 @@
           rail: "e-EUR / NFC / AXIS"
         },
         {
-          clientStatus: "Double-clic pour confirmer 12,40 €",
-          merchantStatus: "Paiement en cours",
+          clientStatus: "Règlement e-EUR en cours",
+          merchantStatus: "Validation PSP client / DESP",
           clientTitle: sale.merchant,
-          clientText: "Formule déjeuner - 12,40 €",
-          merchantTitle: "Validation wallet",
-          merchantText: "Le client confirme le paiement.",
+          clientText: "Le wallet transmet l'ordre de paiement.",
+          merchantTitle: "Routage et règlement",
+          merchantText: "AXIS route la demande. Le PSP client transmet l'ordre au DESP.",
           showNfcClient: false,
           showNfcMerchant: false,
           rail: "e-EUR / NFC / AXIS"
@@ -493,6 +517,7 @@
 
     let mode = "qr";
     let step = 0;
+    let settlementTimer;
 
     const clientScreen = document.querySelector("#clientScreen");
     const merchantScreen = document.querySelector("#merchantScreen");
@@ -506,6 +531,12 @@
       if (state.accepted) return "status";
       if (step === 1) return "status neutral";
       return "status waiting";
+    }
+
+    function statusContent(text) {
+      if (step !== 1) return text;
+      const stars = Array.from({ length: 12 }, (_, index) => `<span style="--i:${index}">★</span>`).join("");
+      return `<span class="eu-star-loader" aria-hidden="true">${stars}</span><span>${text}</span>`;
     }
 
     function paymentVisual(state, side) {
@@ -537,7 +568,7 @@
           <div class="amount">${money(balance)}</div>
           <div>Alias client : CLT-92B7-F31D</div>
         </div>
-        <div class="${statusClass(state)}">${state.clientStatus}</div>
+        <div class="${statusClass(state)}">${statusContent(state.clientStatus)}</div>
         ${paymentVisual(state, "client")}
         <div class="card">
           <strong>${state.clientTitle}</strong>
@@ -566,7 +597,7 @@
           </div>
           <div class="offline-amount">${money(offlinePending.amount)}</div>
         </div>
-        <div class="${statusClass(state)}">${state.merchantStatus}</div>
+        <div class="${statusClass(state)}">${statusContent(state.merchantStatus)}</div>
         ${paymentVisual(state, "merchant")}
         <div class="card">
           <strong>${state.merchantTitle}</strong>
@@ -613,7 +644,20 @@
     function setMode(nextMode) {
       mode = nextMode;
       step = 0;
+      clearTimeout(settlementTimer);
       render();
+    }
+
+    function showSettlementThenAccept() {
+      if (step >= flows.qr.length - 1) return;
+      step = 1;
+      render();
+      clearTimeout(settlementTimer);
+      settlementTimer = setTimeout(() => {
+        if (mode !== "qr") return;
+        step = flows.qr.length - 1;
+        render();
+      }, 1400);
     }
 
     function render() {
@@ -636,8 +680,7 @@
         const response = await fetch(statusUrl, { cache: "no-store" });
         const data = await response.json();
         if (data.confirmed) {
-          step = flows.qr.length - 1;
-          render();
+          showSettlementThenAccept();
         }
       } catch (error) {}
     }, 1200);
