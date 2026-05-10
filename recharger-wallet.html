@@ -84,6 +84,21 @@
       letter-spacing: 0;
     }
 
+    .balance-value {
+      display: grid;
+      grid-template-columns: minmax(0, 1fr) auto;
+      align-items: center;
+      gap: 10px;
+      margin: 4px 0 8px;
+    }
+
+    .currency-symbol {
+      color: #fff;
+      font-size: 50px;
+      font-weight: 950;
+      line-height: 1;
+    }
+
     .balance-input {
       width: 100%;
       min-height: auto;
@@ -217,6 +232,7 @@
     @media (max-width: 460px) {
       .actions { grid-template-columns: 1fr; }
       .amount { font-size: 42px; }
+      .currency-symbol { font-size: 42px; }
     }
   </style>
 </head>
@@ -233,7 +249,10 @@
 
       <div class="balance-card">
         <div class="label">Solde actuel</div>
-        <input class="amount balance-input" id="balanceInput" name="balance" type="number" min="0" step="0.01" inputmode="decimal" aria-label="Solde actuel">
+        <div class="balance-value">
+          <input class="amount balance-input" id="balanceInput" name="balance" type="number" min="0" step="0.01" inputmode="decimal" aria-label="Solde actuel">
+          <span class="currency-symbol" aria-hidden="true">€</span>
+        </div>
         <div>Alias client : CLT-92B7-F31D</div>
       </div>
 
@@ -252,7 +271,10 @@
 
       <div class="balance-card offline-card">
         <div class="label">Puce e-euro offline</div>
-        <input class="amount balance-input" id="offlineBalanceInput" name="offlineBalance" type="number" min="0" step="0.01" inputmode="decimal" aria-label="Solde puce e-euro offline">
+        <div class="balance-value">
+          <input class="amount balance-input" id="offlineBalanceInput" name="offlineBalance" type="number" min="0" step="0.01" inputmode="decimal" aria-label="Solde puce e-euro offline">
+          <span class="currency-symbol" aria-hidden="true">€</span>
+        </div>
         <div>Réserve disponible pour les paiements hors ligne</div>
       </div>
 
