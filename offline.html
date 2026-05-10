@@ -12,6 +12,7 @@
     main { width:min(1120px,calc(100% - 32px)); margin:0 auto; padding:28px 0 34px; }
     header { display:grid; grid-template-columns:1fr auto; gap:18px; align-items:end; margin-bottom:18px; color:#fff; }
     h1 { margin:0; font-size:clamp(30px,4vw,48px); line-height:1.04; letter-spacing:0; }
+    .project-kicker { width:fit-content; margin-bottom:10px; padding:4px 7px; border:1px solid rgba(255,255,255,.28); border-radius:6px; color:rgba(255,255,255,.78); font-size:11px; font-weight:800; letter-spacing:0; }
     .lede { max-width:760px; margin:10px 0 0; color:rgba(255,255,255,.86); font-size:16px; line-height:1.5; }
     .nav-button { display:inline-flex; align-items:center; justify-content:center; min-height:40px; padding:8px 14px; border:1px solid rgba(255,255,255,.36); border-radius:8px; background:rgba(255,255,255,.14); color:#fff; text-decoration:none; font-weight:900; }
     .support-switch { display:inline-grid; grid-template-columns:1fr 1fr; gap:6px; margin-top:12px; padding:6px; border:1px solid rgba(255,255,255,.36); border-radius:8px; background:rgba(255,255,255,.14); }
@@ -83,7 +84,8 @@
   <main>
     <header>
       <div>
-        <h1>Projet PIE 2026 - EM Grenoble - Paiement hors ligne</h1>
+        <div class="project-kicker">Projet PIE 2026 - EM Grenoble</div>
+        <h1>Paiement hors ligne</h1>
         <p class="lede">Simulation e-EUR sans QR code : le client présente un téléphone NFC ou une smart card au TPE, puis la vente est synchronisée plus tard.</p>
         <div class="support-switch" aria-label="Support de paiement hors ligne">
           <button class="active" type="button" data-support="phone">Téléphone NFC</button>
