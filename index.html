@@ -404,6 +404,10 @@
       border-bottom: 1px dashed #9aa8b7;
     }
 
+    .receipt-header .brand-logo {
+      margin-bottom: 0;
+    }
+
     .receipt-header strong {
       color: var(--ink);
       font-size: 16px;
@@ -761,7 +765,7 @@
             Réconciliation terminée
             <span>Vente rapprochée avec le règlement e-EUR. Reporting commerçant prêt.</span>
           </div>
-          <button class="secondary receipt-action" type="button" data-action="generate-receipt">${receiptVisible ? "Masquer le ticket de caisse" : "Générer le ticket de caisse"}</button>
+          <button class="secondary receipt-action" type="button" data-action="generate-receipt">${receiptVisible ? "Masquer le ticket de caisse" : "Imprimer ticket de caisse"}</button>
         ` : ""}
         ${receipt}
         <div class="actions">
