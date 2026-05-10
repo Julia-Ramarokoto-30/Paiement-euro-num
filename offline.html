@@ -100,6 +100,7 @@
       { merchant:"Transavia", amount:3.50, label:"Achat Transavia", article:"Cookie Chocolat Noisettes", reference:"OFF-EUR-240426-03", alias:"MRC-8F3A-214C" }
     ];
     const offlinePending = { count:0, amount:0 };
+    const lastOfflineTransfer = { count:0, amount:0 };
     const offlineBalanceKey = "eeurOfflineChipBalance";
     const defaultOfflineBalance = 184.20;
     const supports = {
@@ -202,6 +203,9 @@
       const s = currentSupport();
       const sale = currentSale();
       const nextButtonLabel = state.refused || state.accepted ? "Nouvelle vente" : "Continuer";
+      const transferMessage = lastOfflineTransfer.count > 0
+        ? `${lastOfflineTransfer.count} transaction${lastOfflineTransfer.count > 1 ? "s" : ""} correctement transférée${lastOfflineTransfer.count > 1 ? "s" : ""} - ${money(lastOfflineTransfer.amount)}`
+        : "Aucun transfert effectué";
       const receipt = receiptVisible ? `
         <div class="ticket" aria-label="Ticket de caisse offline">
           <div class="receipt-header">
@@ -218,7 +222,7 @@
       ` : "";
       merchantScreen.innerHTML = `
         <div class="merchant-total">${brandLogo()}<div class="label">Montant</div><div class="amount">${money(sale.amount)}</div><strong>${sale.label}</strong></div>
-        <div class="offline-sync" aria-label="Ventes offline en attente de synchronisation"><div><span>File offline TPE</span><strong>${offlinePending.count} vente${offlinePending.count > 1 ? "s" : ""} à synchroniser</strong><em>${offlinePending.count === 0 ? "File vidée" : state.accepted ? "Paiement ajouté à la file locale" : "Connexion réseau indisponible"}</em></div><div class="offline-amount">${money(offlinePending.amount)}</div><button class="clear-offline" type="button" data-action="clear-offline" ${offlinePending.count === 0 ? "disabled" : ""}>Vider les transactions offline</button></div>
+        <div class="offline-sync" aria-label="Ventes offline en attente de synchronisation"><div><span>File offline TPE</span><strong>${offlinePending.count} vente${offlinePending.count > 1 ? "s" : ""} à synchroniser</strong><em>${offlinePending.count === 0 ? transferMessage : state.accepted ? "Paiement ajouté à la file locale" : "Connexion réseau indisponible"}</em></div><div class="offline-amount">${money(offlinePending.amount)}</div><button class="clear-offline" type="button" data-action="clear-offline" ${offlinePending.count === 0 ? "disabled" : ""}>Vider les transactions offline</button></div>
         <div class="${statusClass(state)}">${statusContent(state.merchantStatus)}</div>
         ${state.visual ? offlineVisual() : ""}
         ${offlineSettlementVisual()}
@@ -277,7 +281,13 @@
       render();
     }
     function setSupport(nextSupport) { support = nextSupport; resetSaleFlow(); render(); }
-    function clearOfflineTransactions() { offlinePending.count = 0; offlinePending.amount = 0; render(); }
+    function clearOfflineTransactions() {
+      lastOfflineTransfer.count = offlinePending.count;
+      lastOfflineTransfer.amount = offlinePending.amount;
+      offlinePending.count = 0;
+      offlinePending.amount = 0;
+      render();
+    }
     document.addEventListener("click", event => {
       const supportButton = event.target.closest("[data-support]");
       if (supportButton) setSupport(supportButton.dataset.support);
