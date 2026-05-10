@@ -27,9 +27,9 @@
     .amount { margin:4px 0 12px; color:var(--brand-dark); font-size:clamp(40px,6vw,58px); font-weight:900; letter-spacing:0; }
     .wallet-card .amount { color:#fff; }
     .merchant-total { padding:18px; border-radius:8px; background:#f5fbfb; border:1px solid #cbe4e7; }
-    .brand-logo { display:inline-grid; place-items:center; width:fit-content; min-height:34px; margin-bottom:10px; padding:6px 12px; border-radius:6px; font-weight:950; letter-spacing:0; line-height:1; }
-    .brand-logo.transavia { background:#00a86b; color:#fff; font-size:17px; }
-    .brand-logo.transavia::first-letter { color:#d9f000; }
+    .brand-logo { display:inline-grid; place-items:center; width:fit-content; min-height:34px; margin-bottom:10px; padding:0; border-radius:6px; font-weight:950; letter-spacing:0; line-height:1; }
+    .brand-logo.transavia { background:transparent; }
+    .transavia-logo { display:block; width:164px; max-width:100%; height:auto; }
     .status { display:flex; align-items:center; min-height:46px; margin:14px 0; padding:11px 13px; border-radius:8px; background:#e8f7f1; color:var(--ok); font-weight:900; }
     .status.waiting { background:#fff7e6; color:var(--wait); }
     .status.neutral { background:#edf4ff; color:var(--blue); }
@@ -182,7 +182,7 @@
       return `<div class="offline-visual"><div><div class="smart-card"><div class="chip"></div><strong>Smart card e-EUR</strong><span>Solde offline disponible : ${money(getOfflineBalance())}</span></div><div class="tap-symbol">Présenter au TPE</div></div></div>`;
     }
 
-    function brandLogo() { return `<div class="brand-logo transavia" aria-label="Logo Transavia">transavia</div>`; }
+    function brandLogo() { return `<div class="brand-logo transavia" aria-label="Logo Transavia"><svg class="transavia-logo" viewBox="0 0 1280 236" aria-hidden="true" focusable="false"><circle cx="118" cy="118" r="118" fill="#00d66c"/><path fill="#fff" d="M99 52c0-13 8-20 20-20s20 7 20 20v30h29c13 0 20 8 20 19s-7 19-20 19h-29v31c0 20 12 30 29 30 10 0 16 5 16 15 0 13-10 20-28 20-36 0-57-23-57-61v-35H67c-12 0-19-8-19-19s7-19 19-19h32V52Z"/><text x="288" y="190" fill="#00d66c" font-family="Inter, Arial, Helvetica, sans-serif" font-size="154" font-weight="900" letter-spacing="-4">transavia</text></svg></div>`; }
 
     function productPicker() {
       if (step !== 0 || paymentRefused) return "";
