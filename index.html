@@ -637,6 +637,7 @@
     let settlementTimer;
     let settlementInProgress = false;
     let receiptVisible = false;
+    let saleDebited = false;
 
     const clientScreen = document.querySelector("#clientScreen");
     const merchantScreen = document.querySelector("#merchantScreen");
@@ -647,6 +648,16 @@
     function getWalletBalance() {
       const storedBalance = Number(localStorage.getItem(walletBalanceKey));
       return Number.isFinite(storedBalance) ? storedBalance : defaultWalletBalance;
+    }
+
+    function setWalletBalance(balance) {
+      localStorage.setItem(walletBalanceKey, String(Math.max(0, balance)));
+    }
+
+    function debitWalletForAcceptedSale() {
+      if (saleDebited) return;
+      setWalletBalance(getWalletBalance() - sale.amount);
+      saleDebited = true;
     }
 
     function current() {
@@ -709,8 +720,7 @@
 
     function renderClient() {
       const state = current();
-      const walletBalance = getWalletBalance();
-      const balance = state.accepted ? walletBalance - sale.amount : walletBalance;
+      const balance = getWalletBalance();
       clientScreen.innerHTML = `
         <div class="wallet-card">
           <div class="label">Wallet euro numérique</div>
@@ -789,7 +799,11 @@
     function next() {
       const wasAccepted = step === flows[mode].length - 1;
       step = wasAccepted ? 0 : step + 1;
-      if (wasAccepted) receiptVisible = false;
+      if (wasAccepted) {
+        receiptVisible = false;
+        saleDebited = false;
+      }
+      if (current().accepted) debitWalletForAcceptedSale();
       if (mode === "qr" && wasAccepted) fetch(resetUrl, { method: "POST" }).catch(() => {});
       render();
     }
@@ -803,6 +817,7 @@
       mode = nextMode;
       step = 0;
       receiptVisible = false;
+      saleDebited = false;
       settlementInProgress = false;
       clearTimeout(settlementTimer);
       render();
@@ -818,6 +833,7 @@
         if (mode !== "qr") return;
         settlementInProgress = false;
         step = flows.qr.length - 1;
+        debitWalletForAcceptedSale();
         render();
       }, 3000);
     }
