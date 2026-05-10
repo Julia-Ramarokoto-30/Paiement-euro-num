@@ -88,7 +88,7 @@
   </main>
   <script>
     const sale = { merchant:"Transavia", amount:65.00, label:"Achat Transavia", brand:"transavia", reference:"OFF-EUR-240426-03", alias:"MRC-8F3A-214C" };
-    const offlinePending = { count:4, amount:60.20 };
+    const offlinePending = { count:0, amount:0 };
     const supports = {
       phone: { label:"Téléphone NFC", short:"téléphone", reserve:"Réserve e-EUR mobile", balance:184.20, title:"Paiement NFC hors ligne", intro:"Le téléphone contient une réserve e-EUR prête à payer hors ligne.", progress:"Paiement en cours de validation.", ticket:"Ticket téléphone NFC", rail:"e-EUR hors ligne / NFC" },
       card: { label:"Smart card", short:"smart card", reserve:"Réserve e-EUR smart card", balance:184.20, title:"Paiement par smart card", intro:"La carte contient une réserve e-EUR prête à payer hors ligne.", progress:"Paiement en cours de validation.", ticket:"Ticket smart card", rail:"e-EUR hors ligne / smart card" }
@@ -100,6 +100,7 @@
     ];
     let step = 0;
     let support = "phone";
+    let acceptedQueued = false;
     const clientScreen = document.querySelector("#clientScreen");
     const merchantScreen = document.querySelector("#merchantScreen");
     const clientSupportLabel = document.querySelector("#clientSupportLabel");
@@ -175,10 +176,28 @@
       clientSupportLabel.textContent = currentSupport().label;
     }
     function render() { renderSupportButtons(); renderClient(); renderMerchant(); }
-    function next() { step = step === flowBase.length - 1 ? 0 : step + 1; render(); }
+    function queueAcceptedPayment() {
+      if (acceptedQueued) return;
+      offlinePending.count = 1;
+      offlinePending.amount = sale.amount;
+      acceptedQueued = true;
+    }
+    function resetSaleFlow() {
+      step = 0;
+      acceptedQueued = false;
+    }
+    function next() {
+      if (step === flowBase.length - 1) {
+        resetSaleFlow();
+      } else {
+        step += 1;
+        if (flowBase[step].accepted) queueAcceptedPayment();
+      }
+      render();
+    }
     function back() { step = Math.max(0, step - 1); render(); }
-    function setSupport(nextSupport) { support = nextSupport; step = 0; render(); }
-    function clearOfflineTransactions() { offlinePending.count = 0; offlinePending.amount = 0; render(); }
+    function setSupport(nextSupport) { support = nextSupport; resetSaleFlow(); render(); }
+    function clearOfflineTransactions() { offlinePending.count = 0; offlinePending.amount = 0; acceptedQueued = false; render(); }
     document.addEventListener("click", event => {
       const supportButton = event.target.closest("[data-support]");
       if (supportButton) setSupport(supportButton.dataset.support);
