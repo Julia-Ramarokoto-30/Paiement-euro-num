@@ -27,6 +27,9 @@
     .amount { margin:4px 0 12px; color:var(--brand-dark); font-size:clamp(40px,6vw,58px); font-weight:900; letter-spacing:0; }
     .wallet-card .amount { color:#fff; }
     .merchant-total { padding:18px; border-radius:8px; background:#f5fbfb; border:1px solid #cbe4e7; }
+    .brand-logo { display:inline-grid; place-items:center; width:fit-content; min-height:34px; margin-bottom:10px; padding:6px 12px; border-radius:6px; font-weight:950; letter-spacing:0; line-height:1; }
+    .brand-logo.transavia { background:#00a86b; color:#fff; font-size:17px; }
+    .brand-logo.transavia::first-letter { color:#d9f000; }
     .status { display:flex; align-items:center; min-height:46px; margin:14px 0; padding:11px 13px; border-radius:8px; background:#e8f7f1; color:var(--ok); font-weight:900; }
     .status.waiting { background:#fff7e6; color:var(--wait); }
     .status.neutral { background:#edf4ff; color:var(--blue); }
@@ -82,16 +85,16 @@
     </section>
   </main>
   <script>
-    const sale = { merchant:"Boulangerie Rémi", amount:12.40, label:"Formule déjeuner", reference:"OFF-EUR-240426-03", alias:"MRC-8F3A-214C" };
+    const sale = { merchant:"Transavia", amount:89.90, label:"Achat Transavia", brand:"transavia", reference:"OFF-EUR-240426-03", alias:"MRC-8F3A-214C" };
     const offlinePending = { count:4, amount:60.20 };
     const supports = {
-      phone: { label:"Téléphone NFC", short:"téléphone", reserve:"Réserve e-EUR mobile", balance:84.20, title:"Paiement NFC hors ligne", intro:"Le téléphone contient une réserve e-EUR prête à payer hors ligne.", progress:"Paiement en cours de validation.", ticket:"Ticket téléphone NFC", rail:"e-EUR hors ligne / NFC" },
-      card: { label:"Smart card", short:"smart card", reserve:"Réserve e-EUR smart card", balance:84.20, title:"Paiement par smart card", intro:"La carte contient une réserve e-EUR prête à payer hors ligne.", progress:"Paiement en cours de validation.", ticket:"Ticket smart card", rail:"e-EUR hors ligne / smart card" }
+      phone: { label:"Téléphone NFC", short:"téléphone", reserve:"Réserve e-EUR mobile", balance:184.20, title:"Paiement NFC hors ligne", intro:"Le téléphone contient une réserve e-EUR prête à payer hors ligne.", progress:"Paiement en cours de validation.", ticket:"Ticket téléphone NFC", rail:"e-EUR hors ligne / NFC" },
+      card: { label:"Smart card", short:"smart card", reserve:"Réserve e-EUR smart card", balance:184.20, title:"Paiement par smart card", intro:"La carte contient une réserve e-EUR prête à payer hors ligne.", progress:"Paiement en cours de validation.", ticket:"Ticket smart card", rail:"e-EUR hors ligne / smart card" }
     };
     const flowBase = [
       { clientStatus:"Présenter le support au TPE", merchantStatus:"Mode hors ligne actif", merchantTitle:"Attente support", merchantText:"Aucune connexion réseau nécessaire pour accepter le paiement.", visual:true },
       { clientStatus:"Validation du paiement", merchantStatus:"Validation en cours", title:"Paiement en cours", merchantTitle:"Contrôle hors ligne", merchantText:"Le paiement est contrôlé localement, sans connexion réseau." },
-      { clientStatus:"Paiement accepté", merchantStatus:"Accepté - synchro en attente", text:"Boulangerie Rémi - 12,40 €", merchantTitle:"Vente acceptée localement", merchantText:"La vente est ajoutée aux paiements hors ligne et sera transmise à la reconnexion.", accepted:true }
+      { clientStatus:"Paiement accepté", merchantStatus:"Accepté - synchro en attente", text:"Achat Transavia - 89,90 €", merchantTitle:"Vente acceptée localement", merchantText:"La vente est ajoutée aux paiements hors ligne et sera transmise à la reconnexion.", accepted:true }
     ];
     let step = 0;
     let support = "phone";
@@ -132,6 +135,8 @@
       return `<div class="offline-visual"><div><div class="smart-card"><div class="chip"></div><strong>Smart card e-EUR</strong><span>Solde offline disponible : ${money(s.balance)}</span></div><div class="tap-symbol">Présenter au TPE</div></div></div>`;
     }
 
+    function brandLogo() { return `<div class="brand-logo transavia" aria-label="Logo Transavia">transavia</div>`; }
+
     function renderClient() {
       const state = current();
       const s = currentSupport();
@@ -139,7 +144,7 @@
       const title = state.title || s.title;
       const text = state.text || (step === 0 ? s.intro : s.progress);
       clientScreen.innerHTML = `
-        <div class="wallet-card"><div class="label">${s.reserve}</div><div class="amount">${money(balance)}</div><div>Support : ${s.label}</div></div>
+        <div class="wallet-card">${brandLogo()}<div class="label">${s.reserve}</div><div class="amount">${money(balance)}</div><div>Support : ${s.label}</div></div>
         <div class="${statusClass(state)}">${statusContent(state.clientStatus)}</div>
         ${state.visual ? offlineVisual() : ""}
         ${offlineSettlementVisual()}
@@ -152,7 +157,7 @@
       const state = current();
       const s = currentSupport();
       merchantScreen.innerHTML = `
-        <div class="merchant-total"><div class="label">Montant</div><div class="amount">${money(sale.amount)}</div><strong>${sale.label}</strong></div>
+        <div class="merchant-total">${brandLogo()}<div class="label">Montant</div><div class="amount">${money(sale.amount)}</div><strong>${sale.label}</strong></div>
         <div class="offline-sync" aria-label="Ventes offline en attente de synchronisation"><div><span>File offline TPE</span><strong>${offlinePending.count} ventes à synchroniser</strong><em>${state.accepted ? "Paiement ajouté à la file locale" : "Connexion réseau indisponible"}</em></div><div class="offline-amount">${money(offlinePending.amount)}</div></div>
         <div class="${statusClass(state)}">${statusContent(state.merchantStatus)}</div>
         ${state.visual ? offlineVisual() : ""}

@@ -272,6 +272,43 @@
       background: #fff;
     }
 
+    .brand-logo {
+      display: inline-grid;
+      place-items: center;
+      width: fit-content;
+      min-height: 34px;
+      margin-bottom: 10px;
+      padding: 6px 12px;
+      border-radius: 6px;
+      font-weight: 950;
+      letter-spacing: 0;
+      line-height: 1;
+    }
+
+    .brand-logo.paul {
+      border: 2px solid #c9a23a;
+      background: #111f17;
+      color: #f8e1a0;
+      font-family: Georgia, serif;
+      font-size: 18px;
+    }
+
+    .brand-logo.transavia {
+      background: #00a86b;
+      color: #fff;
+      font-size: 17px;
+    }
+
+    .brand-logo.transavia::first-letter { color: #d9f000; }
+
+    .qr-amount {
+      margin-bottom: 12px;
+      color: var(--brand-dark);
+      font-size: 30px;
+      font-weight: 950;
+      line-height: 1;
+    }
+
     .qr-box img {
       display: block;
       width: min(100%, 280px);
@@ -429,9 +466,10 @@
 
   <script>
     const sale = {
-      merchant: "Boulangerie Rémi",
+      merchant: "Boulangerie PAUL",
       amount: 12.40,
-      label: "Formule déjeuner",
+      label: "Achat chez Boulangerie PAUL",
+      brand: "paul",
       reference: "EEUR-WL-240426-8F3A",
       alias: "MRC-8F3A-214C"
     };
@@ -465,8 +503,8 @@
         {
           clientStatus: "Règlement e-EUR en cours",
           merchantStatus: "Validation PSP client / DESP",
-          clientTitle: sale.merchant,
-          clientText: "Le wallet transmet l'ordre de paiement.",
+          clientTitle: sale.label,
+          clientText: "",
           merchantTitle: "Routage et règlement",
           merchantText: "AXIS route la demande. Le PSP client transmet l'ordre au DESP.",
           showQrClient: false,
@@ -477,7 +515,7 @@
           clientStatus: "Paiement accepté",
           merchantStatus: "Accepté - ticket disponible",
           clientTitle: "Ticket wallet",
-          clientText: "Boulangerie Rémi - 12,40 €",
+          clientText: "Achat chez Boulangerie PAUL - 12,40 €",
           merchantTitle: "Vente validée",
           merchantText: "Le paiement e-EUR est confirmé.",
           showQrClient: false,
@@ -501,8 +539,8 @@
         {
           clientStatus: "Règlement e-EUR en cours",
           merchantStatus: "Validation PSP client / DESP",
-          clientTitle: sale.merchant,
-          clientText: "Le wallet transmet l'ordre de paiement.",
+          clientTitle: sale.label,
+          clientText: "",
           merchantTitle: "Routage et règlement",
           merchantText: "AXIS route la demande. Le PSP client transmet l'ordre au DESP.",
           showNfcClient: false,
@@ -513,7 +551,7 @@
           clientStatus: "Paiement accepté",
           merchantStatus: "Accepté - ticket disponible",
           clientTitle: "Ticket wallet",
-          clientText: "Boulangerie Rémi - 12,40 €",
+          clientText: "Achat chez Boulangerie PAUL - 12,40 €",
           merchantTitle: "Vente validée",
           merchantText: "Le paiement e-EUR est confirmé.",
           showNfcClient: false,
@@ -563,12 +601,20 @@
       `;
     }
 
+    function brandLogo(brand = sale.brand) {
+      if (brand === "paul") return `<div class="brand-logo paul" aria-label="Logo PAUL">PAUL</div>`;
+      if (brand === "transavia") return `<div class="brand-logo transavia" aria-label="Logo Transavia">transavia</div>`;
+      return "";
+    }
+
     function paymentVisual(state, side) {
       if ((side === "client" && state.showQrClient) || (side === "merchant" && state.showQrMerchant)) {
         return `
           <div class="qr-box">
+            ${brandLogo()}
+            <div class="qr-amount">${money(sale.amount)}</div>
             <a href="${paymentLink}" target="_blank" rel="noreferrer"><img src="${qrUrl}" alt="QR code wallet e-EUR" loading="eager"></a>
-            <div class="qr-caption">Scannez pour ouvrir le wallet</div>
+            <div class="qr-caption">${sale.label}</div>
           </div>
         `;
       }
@@ -597,7 +643,7 @@
         ${settlementVisual()}
         <div class="card">
           <strong>${state.clientTitle}</strong>
-          <p>${state.clientText}</p>
+          ${state.clientText ? `<p>${state.clientText}</p>` : ""}
         </div>
         <div class="actions">
           <button class="secondary" type="button" data-action="back">Retour</button>
@@ -610,6 +656,7 @@
       const state = current();
       merchantScreen.innerHTML = `
         <div class="merchant-total">
+          ${brandLogo()}
           <div class="label">Montant</div>
           <div class="amount">${money(sale.amount)}</div>
           <strong>${sale.label}</strong>
