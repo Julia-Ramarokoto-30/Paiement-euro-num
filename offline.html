@@ -57,6 +57,8 @@
     .offline-sync strong { display:block; color:#7a4300; font-size:14px; }
     .offline-sync em { display:block; margin-top:3px; color:#946113; font-size:12px; font-style:normal; font-weight:700; }
     .offline-amount { color:#7a4300; font-size:22px; font-weight:950; text-align:right; white-space:nowrap; }
+    .clear-offline { grid-column:1 / -1; min-height:38px; border:1px solid #d99b3d; border-radius:8px; background:#fff; color:#7a4300; cursor:pointer; font-weight:900; }
+    .clear-offline:disabled { border-color:#ead9bd; color:#b69462; cursor:not-allowed; opacity:.7; }
     .ticket { display:grid; gap:9px; margin-top:14px; padding:14px; border:1px dashed #9aa8b7; border-radius:8px; background:#fff; font-family:ui-monospace,SFMono-Regular,Menlo,Consolas,monospace; font-size:13px; color:#344054; }
     .ticket-row { display:flex; justify-content:space-between; gap:12px; }
     .actions { display:grid; grid-template-columns:1fr 1fr; gap:10px; margin-top:14px; }
@@ -158,7 +160,7 @@
       const s = currentSupport();
       merchantScreen.innerHTML = `
         <div class="merchant-total">${brandLogo()}<div class="label">Montant</div><div class="amount">${money(sale.amount)}</div><strong>${sale.label}</strong></div>
-        <div class="offline-sync" aria-label="Ventes offline en attente de synchronisation"><div><span>File offline TPE</span><strong>${offlinePending.count} ventes à synchroniser</strong><em>${state.accepted ? "Paiement ajouté à la file locale" : "Connexion réseau indisponible"}</em></div><div class="offline-amount">${money(offlinePending.amount)}</div></div>
+        <div class="offline-sync" aria-label="Ventes offline en attente de synchronisation"><div><span>File offline TPE</span><strong>${offlinePending.count} ventes à synchroniser</strong><em>${offlinePending.count === 0 ? "File vidée" : state.accepted ? "Paiement ajouté à la file locale" : "Connexion réseau indisponible"}</em></div><div class="offline-amount">${money(offlinePending.amount)}</div><button class="clear-offline" type="button" data-action="clear-offline" ${offlinePending.count === 0 ? "disabled" : ""}>Vider les transactions offline</button></div>
         <div class="${statusClass(state)}">${statusContent(state.merchantStatus)}</div>
         ${state.visual ? offlineVisual() : ""}
         ${offlineSettlementVisual()}
@@ -176,12 +178,14 @@
     function next() { step = step === flowBase.length - 1 ? 0 : step + 1; render(); }
     function back() { step = Math.max(0, step - 1); render(); }
     function setSupport(nextSupport) { support = nextSupport; step = 0; render(); }
+    function clearOfflineTransactions() { offlinePending.count = 0; offlinePending.amount = 0; render(); }
     document.addEventListener("click", event => {
       const supportButton = event.target.closest("[data-support]");
       if (supportButton) setSupport(supportButton.dataset.support);
       const action = event.target.closest("[data-action]")?.dataset.action;
       if (action === "next") next();
       if (action === "back") back();
+      if (action === "clear-offline") clearOfflineTransactions();
     });
     render();
   </script>
