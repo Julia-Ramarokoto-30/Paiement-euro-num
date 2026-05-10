@@ -397,6 +397,36 @@
       gap: 12px;
     }
 
+    .receipt-header {
+      display: grid;
+      gap: 6px;
+      padding-bottom: 10px;
+      border-bottom: 1px dashed #9aa8b7;
+    }
+
+    .receipt-header strong {
+      color: var(--ink);
+      font-size: 16px;
+    }
+
+    .receipt-header span {
+      color: var(--brand-dark);
+      font-weight: 950;
+      text-transform: uppercase;
+    }
+
+    .receipt-total {
+      margin-top: 4px;
+      padding-top: 10px;
+      border-top: 1px dashed #9aa8b7;
+      font-weight: 950;
+    }
+
+    .receipt-action {
+      width: 100%;
+      margin-top: 14px;
+    }
+
     .reconciliation {
       display: grid;
       gap: 6px;
@@ -489,9 +519,17 @@
   <script>
     const sale = {
       merchant: "Auchan",
-      amount: 8.40,
+      amount: 14.43,
       label: "Achat Auchan",
-      items: "Pancakes et sirop d'érable",
+      items: [
+        { name: "Pancakes", price: 2.35 },
+        { name: "Jus d'orange", price: 2.10 },
+        { name: "Lait", price: 1.15 },
+        { name: "Myrtilles", price: 3.49 },
+        { name: "Confiture de pêche", price: 2.25 },
+        { name: "Kiwi", price: 0.69 },
+        { name: "Menthe thé vert", price: 2.40 }
+      ],
       brand: "auchan",
       reference: "EEUR-WL-240426-8F3A",
       alias: "MRC-8F3A-214C"
@@ -538,7 +576,7 @@
           clientStatus: "Paiement accepté",
           merchantStatus: "Accepté - ticket disponible",
           clientTitle: "Ticket wallet",
-          clientText: "Auchan - 8,40 €",
+          clientText: "Auchan - 14,43 €",
           merchantTitle: "Vente validée",
           merchantText: "Le paiement e-EUR est confirmé.",
           showQrClient: false,
@@ -574,7 +612,7 @@
           clientStatus: "Paiement accepté",
           merchantStatus: "Accepté - ticket disponible",
           clientTitle: "Ticket wallet",
-          clientText: "Auchan - 8,40 €",
+          clientText: "Auchan - 14,43 €",
           merchantTitle: "Vente validée",
           merchantText: "Le paiement e-EUR est confirmé.",
           showNfcClient: false,
@@ -589,6 +627,7 @@
     let step = 0;
     let settlementTimer;
     let settlementInProgress = false;
+    let receiptVisible = false;
 
     const clientScreen = document.querySelector("#clientScreen");
     const merchantScreen = document.querySelector("#merchantScreen");
@@ -686,6 +725,23 @@
 
     function renderMerchant() {
       const state = current();
+      const ticketItems = sale.items
+        .map(item => `<div class="ticket-row"><span>${item.name}</span><strong>${money(item.price)}</strong></div>`)
+        .join("");
+      const receipt = receiptVisible ? `
+        <div class="ticket" aria-label="Ticket de caisse Auchan">
+          <div class="receipt-header">
+            ${brandLogo()}
+            <strong>Ticket de caisse</strong>
+            <span>Paiement e-euro</span>
+          </div>
+          ${ticketItems}
+          <div class="ticket-row receipt-total"><span>Total</span><strong>${money(sale.amount)}</strong></div>
+          <div class="ticket-row"><span>Mode paiement</span><strong>e-euro</strong></div>
+          <div class="ticket-row"><span>Statut</span><strong>${state.accepted ? "ACCEPTÉ" : "EN COURS"}</strong></div>
+          <div class="ticket-row"><span>Ref.</span><strong>${sale.reference}</strong></div>
+        </div>
+      ` : "";
       merchantScreen.innerHTML = `
         <div class="merchant-total">
           ${brandLogo()}
@@ -700,20 +756,14 @@
           <strong>${state.merchantTitle}</strong>
           <p>${state.merchantText}</p>
         </div>
-        <div class="ticket" aria-label="Ticket commerçant">
-          <div class="ticket-row"><span>Marchand</span><strong>${sale.merchant}</strong></div>
-          <div class="ticket-row"><span>Articles</span><strong>${sale.items}</strong></div>
-          <div class="ticket-row"><span>Montant</span><strong>${money(sale.amount)}</strong></div>
-          <div class="ticket-row"><span>Rail</span><strong>${state.rail}</strong></div>
-          <div class="ticket-row"><span>Statut</span><strong>${state.accepted ? "ACCEPTÉ" : "EN COURS"}</strong></div>
-          <div class="ticket-row"><span>Ref.</span><strong>${sale.reference}</strong></div>
-        </div>
         ${state.accepted ? `
           <div class="reconciliation" aria-label="Réconciliation commerçant">
             Réconciliation terminée
             <span>Vente rapprochée avec le règlement e-EUR. Reporting commerçant prêt.</span>
           </div>
+          <button class="secondary receipt-action" type="button" data-action="generate-receipt">${receiptVisible ? "Masquer le ticket de caisse" : "Générer le ticket de caisse"}</button>
         ` : ""}
+        ${receipt}
         <div class="actions">
           <button class="secondary" type="button" data-action="back">Retour</button>
           <button class="primary" type="button" data-action="next">${state.accepted ? "Nouvelle vente" : "Continuer"}</button>
@@ -730,6 +780,7 @@
     function next() {
       const wasAccepted = step === flows[mode].length - 1;
       step = wasAccepted ? 0 : step + 1;
+      if (wasAccepted) receiptVisible = false;
       if (mode === "qr" && wasAccepted) fetch(resetUrl, { method: "POST" }).catch(() => {});
       render();
     }
@@ -742,6 +793,7 @@
     function setMode(nextMode) {
       mode = nextMode;
       step = 0;
+      receiptVisible = false;
       settlementInProgress = false;
       clearTimeout(settlementTimer);
       render();
@@ -773,6 +825,10 @@
       const action = event.target.closest("[data-action]")?.dataset.action;
       if (action === "next") next();
       if (action === "back") back();
+      if (action === "generate-receipt") {
+        receiptVisible = !receiptVisible;
+        render();
+      }
     });
 
     setInterval(async () => {
