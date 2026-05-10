@@ -238,41 +238,6 @@
       line-height: 1.4;
     }
 
-    .settlement-timeline {
-      display: grid;
-      gap: 8px;
-      width: 100%;
-      max-width: 420px;
-      margin-top: 18px;
-      text-align: left;
-    }
-
-    .settlement-step {
-      display: grid;
-      grid-template-columns: 18px 1fr;
-      gap: 10px;
-      align-items: start;
-      color: #455468;
-      font-size: 13px;
-      line-height: 1.35;
-    }
-
-    .settlement-step::before {
-      content: "";
-      width: 10px;
-      height: 10px;
-      margin-top: 4px;
-      border-radius: 999px;
-      background: var(--blue);
-      box-shadow: 0 0 0 4px rgba(23,63,138,.12);
-    }
-
-    .settlement-step strong {
-      display: block;
-      margin: 0 0 2px;
-      color: var(--blue);
-      font-size: 13px;
-    }
 
     .status.waiting { background: #fff7e6; color: var(--wait); }
     .status.neutral { background: #edf4ff; color: var(--blue); }
@@ -499,11 +464,11 @@
         },
         {
           clientStatus: "Règlement e-EUR en cours",
-          merchantStatus: "Validation réseau e-EUR",
+          merchantStatus: "Validation PSP client / DESP",
           clientTitle: sale.merchant,
           clientText: "Le wallet transmet l'ordre de paiement.",
           merchantTitle: "Routage et règlement",
-          merchantText: "AXIS route la demande vers le réseau e-EUR.",
+          merchantText: "AXIS route la demande. Le PSP client transmet l'ordre au DESP.",
           showQrClient: false,
           showQrMerchant: false,
           rail: "e-EUR / QR / AXIS"
@@ -535,11 +500,11 @@
         },
         {
           clientStatus: "Règlement e-EUR en cours",
-          merchantStatus: "Validation réseau e-EUR",
+          merchantStatus: "Validation PSP client / DESP",
           clientTitle: sale.merchant,
           clientText: "Le wallet transmet l'ordre de paiement.",
           merchantTitle: "Routage et règlement",
-          merchantText: "AXIS route la demande vers le réseau e-EUR.",
+          merchantText: "AXIS route la demande. Le PSP client transmet l'ordre au DESP.",
           showNfcClient: false,
           showNfcMerchant: false,
           rail: "e-EUR / NFC / AXIS"
@@ -588,24 +553,13 @@
       return `${starRing()}<span>${text}</span>`;
     }
 
-    function settlementTimeline() {
-      return `
-        <div class="settlement-timeline" aria-label="Progression de l&rsquo;ordre de paiement">
-          <div class="settlement-step"><span><strong>Validation PSP client</strong>Le wallet transmet l&rsquo;ordre de paiement.</span></div>
-          <div class="settlement-step"><span><strong>Contrôle réseau e-EUR</strong>Le réseau e-EUR vérifie l&rsquo;ordre.</span></div>
-          <div class="settlement-step"><span><strong>Confirmation TPE</strong>Le règlement est confirmé au commerçant.</span></div>
-        </div>
-      `;
-    }
-
     function settlementVisual() {
       if (step !== 1) return "";
       return `
         <div class="settlement-panel" aria-label="Règlement en cours">
           ${starRing("large")}
           <strong>Règlement e-EUR en cours</strong>
-          <p>Le paiement progresse dans le réseau e-EUR. Le TPE attend la confirmation.</p>
-          ${settlementTimeline()}
+          <p>Le PSP client transmet l'ordre au DESP. Le TPE attend la confirmation de règlement.</p>
         </div>
       `;
     }
