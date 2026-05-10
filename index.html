@@ -182,8 +182,45 @@
       transform-origin: 0 0;
     }
 
+    .eu-star-loader.large {
+      width: 86px;
+      height: 86px;
+      margin: 0 auto 16px;
+    }
+
+    .eu-star-loader.large span {
+      font-size: 17px;
+      transform: rotate(calc(var(--i) * 30deg)) translateY(-36px);
+    }
+
     @keyframes spinStars {
       to { transform: rotate(360deg); }
+    }
+
+    .settlement-panel {
+      display: grid;
+      place-items: center;
+      min-height: 238px;
+      margin: 14px 0;
+      padding: 24px;
+      border: 1px solid #cfe0ff;
+      border-radius: 8px;
+      background: linear-gradient(135deg, #f6f9ff, #edf4ff);
+      text-align: center;
+    }
+
+    .settlement-panel strong {
+      display: block;
+      color: var(--blue);
+      font-size: 18px;
+      margin-bottom: 6px;
+    }
+
+    .settlement-panel p {
+      max-width: 320px;
+      margin: 0;
+      color: #455468;
+      line-height: 1.4;
     }
 
     .status.waiting { background: #fff7e6; color: var(--wait); }
@@ -518,6 +555,7 @@
     let mode = "qr";
     let step = 0;
     let settlementTimer;
+    let settlementInProgress = false;
 
     const clientScreen = document.querySelector("#clientScreen");
     const merchantScreen = document.querySelector("#merchantScreen");
@@ -533,10 +571,25 @@
       return "status waiting";
     }
 
+    function starRing(size = "") {
+      const stars = Array.from({ length: 12 }, (_, index) => `<span style="--i:${index}">★</span>`).join("");
+      return `<span class="eu-star-loader ${size}" aria-hidden="true">${stars}</span>`;
+    }
+
     function statusContent(text) {
       if (step !== 1) return text;
-      const stars = Array.from({ length: 12 }, (_, index) => `<span style="--i:${index}">★</span>`).join("");
-      return `<span class="eu-star-loader" aria-hidden="true">${stars}</span><span>${text}</span>`;
+      return `${starRing()}<span>${text}</span>`;
+    }
+
+    function settlementVisual() {
+      if (step !== 1) return "";
+      return `
+        <div class="settlement-panel" aria-label="Règlement en cours">
+          ${starRing("large")}
+          <strong>Règlement e-EUR en cours</strong>
+          <p>Le PSP client transmet l'ordre au DESP. Le TPE attend la confirmation de règlement.</p>
+        </div>
+      `;
     }
 
     function paymentVisual(state, side) {
@@ -570,6 +623,7 @@
         </div>
         <div class="${statusClass(state)}">${statusContent(state.clientStatus)}</div>
         ${paymentVisual(state, "client")}
+        ${settlementVisual()}
         <div class="card">
           <strong>${state.clientTitle}</strong>
           <p>${state.clientText}</p>
@@ -599,6 +653,7 @@
         </div>
         <div class="${statusClass(state)}">${statusContent(state.merchantStatus)}</div>
         ${paymentVisual(state, "merchant")}
+        ${settlementVisual()}
         <div class="card">
           <strong>${state.merchantTitle}</strong>
           <p>${state.merchantText}</p>
@@ -644,20 +699,23 @@
     function setMode(nextMode) {
       mode = nextMode;
       step = 0;
+      settlementInProgress = false;
       clearTimeout(settlementTimer);
       render();
     }
 
     function showSettlementThenAccept() {
-      if (step >= flows.qr.length - 1) return;
+      if (settlementInProgress || step >= flows.qr.length - 1) return;
+      settlementInProgress = true;
       step = 1;
       render();
       clearTimeout(settlementTimer);
       settlementTimer = setTimeout(() => {
         if (mode !== "qr") return;
+        settlementInProgress = false;
         step = flows.qr.length - 1;
         render();
-      }, 1400);
+      }, 3000);
     }
 
     function render() {

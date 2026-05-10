@@ -24,6 +24,25 @@
     button:disabled { background: #12805c; cursor: default; }
     .status { display: none; margin-top: 14px; padding: 12px; border-radius: 10px; background: #e8f7f1; color: #12805c; font-weight: 900; text-align: center; }
     .status.show { display: block; }
+    .status.pending { background: #edf4ff; color: #173f8a; }
+    .wallet-loader {
+      position: relative;
+      width: 78px;
+      height: 78px;
+      margin: 18px auto 10px;
+      animation: spinStars 1.4s linear infinite;
+    }
+    .wallet-loader span {
+      position: absolute;
+      left: 50%;
+      top: 50%;
+      color: #f5c542;
+      font-size: 16px;
+      line-height: 1;
+      transform: rotate(calc(var(--i) * 30deg)) translateY(-32px);
+      transform-origin: 0 0;
+    }
+    @keyframes spinStars { to { transform: rotate(360deg); } }
   </style>
 </head>
 <body>
@@ -59,10 +78,19 @@
     document.querySelector('#ref').textContent = ref;
     document.querySelector('#alias').textContent = alias;
     document.querySelector('#confirm').addEventListener('click', async () => {
+      const button = document.querySelector('#confirm');
+      const status = document.querySelector('#status');
+      const stars = Array.from({ length: 12 }, (_, index) => `<span style="--i:${index}">★</span>`).join("");
+      button.textContent = 'Règlement en cours';
+      button.disabled = true;
+      status.innerHTML = `<div class="wallet-loader" aria-hidden="true">${stars}</div>Validation PSP client / DESP`;
+      status.className = 'status show pending';
       await fetch('/confirm', { method: 'POST' }).catch(() => {});
-      document.querySelector('#confirm').textContent = 'Confirmé';
-      document.querySelector('#confirm').disabled = true;
-      document.querySelector('#status').classList.add('show');
+      setTimeout(() => {
+        button.textContent = 'Confirmé';
+        status.textContent = 'Paiement accepté';
+        status.className = 'status show';
+      }, 2600);
     });
   </script>
 </body>
