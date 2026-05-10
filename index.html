@@ -267,6 +267,15 @@
       text-transform: uppercase;
     }
 
+    .offline-sync em {
+      display: block;
+      margin-top: 3px;
+      color: #946113;
+      font-size: 12px;
+      font-style: normal;
+      font-weight: 700;
+    }
+
     .offline-sync .offline-amount {
       color: #7a4300;
       font-size: 22px;
@@ -553,6 +562,7 @@
           <div>
             <span>Ventes offline en attente</span>
             <strong>${offlinePending.count} ventes à synchroniser</strong>
+            <em>${state.accepted ? "Synchronisation DESP terminée" : "En attente de reconnexion réseau"}</em>
           </div>
           <div class="offline-amount">${money(offlinePending.amount)}</div>
         </div>
