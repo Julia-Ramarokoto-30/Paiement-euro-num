@@ -93,10 +93,11 @@
       { merchant:"Transavia", amount:3.50, label:"Achat Transavia", article:"Cookie Chocolat Noisettes", reference:"OFF-EUR-240426-03", alias:"MRC-8F3A-214C" }
     ];
     const offlinePending = { count:0, amount:0 };
-    let walletSpent = 0;
+    const offlineBalanceKey = "eeurOfflineChipBalance";
+    const defaultOfflineBalance = 184.20;
     const supports = {
-      phone: { label:"Téléphone NFC", short:"téléphone", reserve:"Réserve e-EUR mobile", balance:184.20, title:"Paiement NFC hors ligne", intro:"Le téléphone contient une réserve e-EUR prête à payer hors ligne.", progress:"Paiement en cours de validation.", ticket:"Ticket téléphone NFC", rail:"e-EUR hors ligne / NFC" },
-      card: { label:"Smart card", short:"smart card", reserve:"Réserve e-EUR smart card", balance:184.20, title:"Paiement par smart card", intro:"La carte contient une réserve e-EUR prête à payer hors ligne.", progress:"Paiement en cours de validation.", ticket:"Ticket smart card", rail:"e-EUR hors ligne / smart card" }
+      phone: { label:"Téléphone NFC", short:"téléphone", reserve:"Réserve e-EUR mobile", title:"Paiement NFC hors ligne", intro:"Le téléphone contient une réserve e-EUR prête à payer hors ligne.", progress:"Paiement en cours de validation.", ticket:"Ticket téléphone NFC", rail:"e-EUR hors ligne / NFC" },
+      card: { label:"Smart card", short:"smart card", reserve:"Réserve e-EUR smart card", title:"Paiement par smart card", intro:"La carte contient une réserve e-EUR prête à payer hors ligne.", progress:"Paiement en cours de validation.", ticket:"Ticket smart card", rail:"e-EUR hors ligne / smart card" }
     };
     const flowBase = [
       { clientStatus:"Présenter le support au TPE", merchantStatus:"Mode hors ligne actif", merchantTitle:"Attente support", merchantText:"Aucune connexion réseau nécessaire pour accepter le paiement.", visual:true },
@@ -115,6 +116,15 @@
     const currentSale = () => sales[saleIndex];
     const currentSupport = () => supports[support];
     const statusClass = state => state.accepted ? "status" : step === 1 ? "status neutral" : "status waiting";
+
+    function getOfflineBalance() {
+      const storedBalance = Number(localStorage.getItem(offlineBalanceKey));
+      return Number.isFinite(storedBalance) ? storedBalance : defaultOfflineBalance;
+    }
+
+    function setOfflineBalance(balance) {
+      localStorage.setItem(offlineBalanceKey, String(Math.max(0, balance)));
+    }
 
     function starRing(size = "") {
       const stars = Array.from({ length: 12 }, (_, index) => `<span style="--i:${index}">★</span>`).join("");
@@ -142,7 +152,7 @@
       if (support === "phone") {
         return `<div class="offline-visual"><div><div class="phone">NFC<span>Secure Element</span></div><div class="tap-symbol">Approcher du TPE</div></div></div>`;
       }
-      return `<div class="offline-visual"><div><div class="smart-card"><div class="chip"></div><strong>Smart card e-EUR</strong><span>Solde offline disponible : ${money(s.balance)}</span></div><div class="tap-symbol">Présenter au TPE</div></div></div>`;
+      return `<div class="offline-visual"><div><div class="smart-card"><div class="chip"></div><strong>Smart card e-EUR</strong><span>Solde offline disponible : ${money(getOfflineBalance())}</span></div><div class="tap-symbol">Présenter au TPE</div></div></div>`;
     }
 
     function brandLogo() { return `<div class="brand-logo transavia" aria-label="Logo Transavia">transavia</div>`; }
@@ -151,7 +161,7 @@
       const state = current();
       const s = currentSupport();
       const sale = currentSale();
-      const balance = s.balance - walletSpent;
+      const balance = getOfflineBalance();
       const title = state.title || s.title;
       const text = state.accepted ? `${sale.label} - ${money(sale.amount)}` : state.text || (step === 0 ? s.intro : s.progress);
       clientScreen.innerHTML = `
@@ -190,7 +200,7 @@
       const sale = currentSale();
       offlinePending.count += 1;
       offlinePending.amount += sale.amount;
-      walletSpent += sale.amount;
+      setOfflineBalance(getOfflineBalance() - sale.amount);
       acceptedQueued = true;
     }
     function resetSaleFlow() {
