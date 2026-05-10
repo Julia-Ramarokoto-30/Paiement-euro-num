@@ -85,13 +85,13 @@
     const sale = { merchant:"Boulangerie Rémi", amount:12.40, label:"Formule déjeuner", reference:"OFF-EUR-240426-03", alias:"MRC-8F3A-214C" };
     const offlinePending = { count:4, amount:60.20 };
     const supports = {
-      phone: { label:"Téléphone NFC", short:"téléphone", reserve:"Réserve e-EUR mobile", balance:84.20, title:"Paiement NFC hors ligne", intro:"Le téléphone contient une réserve e-EUR préchargée dans sa puce sécurisée.", token:"Le téléphone signe localement le paiement avec un token unique.", ticket:"Ticket téléphone NFC", rail:"e-EUR / offline / NFC" },
-      card: { label:"Smart card", short:"smart card", reserve:"Réserve e-EUR smart card", balance:84.20, title:"Paiement par smart card", intro:"La carte contient une réserve e-EUR préchargée dans une puce sécurisée.", token:"La smart card signe localement le paiement avec un token unique.", ticket:"Ticket smart card", rail:"e-EUR / offline / smart card" }
+      phone: { label:"Téléphone NFC", short:"téléphone", reserve:"Réserve e-EUR mobile", balance:84.20, title:"Paiement NFC hors ligne", intro:"Le téléphone contient une réserve e-EUR prête à payer hors ligne.", progress:"Paiement en cours de validation.", ticket:"Ticket téléphone NFC", rail:"e-EUR hors ligne / NFC" },
+      card: { label:"Smart card", short:"smart card", reserve:"Réserve e-EUR smart card", balance:84.20, title:"Paiement par smart card", intro:"La carte contient une réserve e-EUR prête à payer hors ligne.", progress:"Paiement en cours de validation.", ticket:"Ticket smart card", rail:"e-EUR hors ligne / smart card" }
     };
     const flowBase = [
       { clientStatus:"Présenter le support au TPE", merchantStatus:"Mode hors ligne actif", merchantTitle:"Attente support", merchantText:"Aucune connexion réseau nécessaire pour accepter le paiement.", visual:true },
-      { clientStatus:"Authentification locale de la puce", merchantStatus:"Vérification du token signé", title:"Échange puce à puce", merchantTitle:"Contrôle offline", merchantText:"Le TPE vérifie le token et le compteur anti-rejeu sans interroger le serveur." },
-      { clientStatus:"Paiement accepté", merchantStatus:"Accepté - synchro en attente", text:"Boulangerie Rémi - 12,40 €", merchantTitle:"Vente acceptée localement", merchantText:"La vente est ajoutée à la file offline et sera transmise à la reconnexion.", accepted:true }
+      { clientStatus:"Validation du paiement", merchantStatus:"Validation en cours", title:"Paiement en cours", merchantTitle:"Contrôle hors ligne", merchantText:"Le paiement est contrôlé localement, sans connexion réseau." },
+      { clientStatus:"Paiement accepté", merchantStatus:"Accepté - synchro en attente", text:"Boulangerie Rémi - 12,40 €", merchantTitle:"Vente acceptée localement", merchantText:"La vente est ajoutée aux paiements hors ligne et sera transmise à la reconnexion.", accepted:true }
     ];
     let step = 0;
     let support = "phone";
@@ -116,10 +116,10 @@
     function offlineSettlementVisual() {
       if (step !== 1) return "";
       return `
-        <div class="settlement-panel" aria-label="Authentification offline en cours">
+        <div class="settlement-panel" aria-label="Validation du paiement en cours">
           ${starRing("large")}
-          <strong>Authentification locale en cours</strong>
-          <p>Le TPE vérifie la puce sécurisée et le token signé sans connexion réseau.</p>
+          <strong>Validation en cours</strong>
+          <p>Le paiement est vérifié sans connexion réseau.</p>
         </div>
       `;
     }
@@ -137,7 +137,7 @@
       const s = currentSupport();
       const balance = state.accepted ? s.balance - sale.amount : s.balance;
       const title = state.title || s.title;
-      const text = state.text || (step === 0 ? s.intro : s.token);
+      const text = state.text || (step === 0 ? s.intro : s.progress);
       clientScreen.innerHTML = `
         <div class="wallet-card"><div class="label">${s.reserve}</div><div class="amount">${money(balance)}</div><div>Support : ${s.label}</div></div>
         <div class="${statusClass(state)}">${statusContent(state.clientStatus)}</div>
