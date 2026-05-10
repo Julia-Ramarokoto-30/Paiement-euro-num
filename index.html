@@ -285,12 +285,12 @@
       line-height: 1;
     }
 
-    .brand-logo.paul {
-      border: 2px solid #c9a23a;
-      background: #111f17;
-      color: #f8e1a0;
-      font-family: Georgia, serif;
+    .brand-logo.auchan {
+      border: 2px solid #e31b23;
+      background: #fff;
+      color: #e31b23;
       font-size: 18px;
+      text-transform: uppercase;
     }
 
     .brand-logo.transavia {
@@ -466,10 +466,11 @@
 
   <script>
     const sale = {
-      merchant: "Boulangerie PAUL",
+      merchant: "Auchan",
       amount: 12.40,
-      label: "Achat chez Boulangerie PAUL",
-      brand: "paul",
+      label: "Achat Auchan",
+      items: "Pancakes et sirop d'érable",
+      brand: "auchan",
       reference: "EEUR-WL-240426-8F3A",
       alias: "MRC-8F3A-214C"
     };
@@ -503,7 +504,7 @@
         {
           clientStatus: "Règlement e-EUR en cours",
           merchantStatus: "Validation PSP client / DESP",
-          clientTitle: sale.label,
+          clientTitle: sale.merchant,
           clientText: "",
           merchantTitle: "Routage et règlement",
           merchantText: "AXIS route la demande. Le PSP client transmet l'ordre au DESP.",
@@ -515,7 +516,7 @@
           clientStatus: "Paiement accepté",
           merchantStatus: "Accepté - ticket disponible",
           clientTitle: "Ticket wallet",
-          clientText: "Achat chez Boulangerie PAUL - 12,40 €",
+          clientText: "Auchan - 12,40 €",
           merchantTitle: "Vente validée",
           merchantText: "Le paiement e-EUR est confirmé.",
           showQrClient: false,
@@ -539,7 +540,7 @@
         {
           clientStatus: "Règlement e-EUR en cours",
           merchantStatus: "Validation PSP client / DESP",
-          clientTitle: sale.label,
+          clientTitle: sale.merchant,
           clientText: "",
           merchantTitle: "Routage et règlement",
           merchantText: "AXIS route la demande. Le PSP client transmet l'ordre au DESP.",
@@ -551,7 +552,7 @@
           clientStatus: "Paiement accepté",
           merchantStatus: "Accepté - ticket disponible",
           clientTitle: "Ticket wallet",
-          clientText: "Achat chez Boulangerie PAUL - 12,40 €",
+          clientText: "Auchan - 12,40 €",
           merchantTitle: "Vente validée",
           merchantText: "Le paiement e-EUR est confirmé.",
           showNfcClient: false,
@@ -602,7 +603,7 @@
     }
 
     function brandLogo(brand = sale.brand) {
-      if (brand === "paul") return `<div class="brand-logo paul" aria-label="Logo PAUL">PAUL</div>`;
+      if (brand === "auchan") return `<div class="brand-logo auchan" aria-label="Logo Auchan">Auchan</div>`;
       if (brand === "transavia") return `<div class="brand-logo transavia" aria-label="Logo Transavia">transavia</div>`;
       return "";
     }
@@ -614,7 +615,7 @@
             ${brandLogo()}
             <div class="qr-amount">${money(sale.amount)}</div>
             <a href="${paymentLink}" target="_blank" rel="noreferrer"><img src="${qrUrl}" alt="QR code wallet e-EUR" loading="eager"></a>
-            <div class="qr-caption">${sale.label}</div>
+            <div class="qr-caption">${sale.merchant}</div>
           </div>
         `;
       }
@@ -659,7 +660,7 @@
           ${brandLogo()}
           <div class="label">Montant</div>
           <div class="amount">${money(sale.amount)}</div>
-          <strong>${sale.label}</strong>
+          <strong>${sale.merchant}</strong>
         </div>
         <div class="${statusClass(state)}">${statusContent(state.merchantStatus)}</div>
         ${paymentVisual(state, "merchant")}
@@ -670,6 +671,7 @@
         </div>
         <div class="ticket" aria-label="Ticket commerçant">
           <div class="ticket-row"><span>Marchand</span><strong>${sale.merchant}</strong></div>
+          <div class="ticket-row"><span>Articles</span><strong>${sale.items}</strong></div>
           <div class="ticket-row"><span>Montant</span><strong>${money(sale.amount)}</strong></div>
           <div class="ticket-row"><span>Rail</span><strong>${state.rail}</strong></div>
           <div class="ticket-row"><span>Statut</span><strong>${state.accepted ? "ACCEPTÉ" : "EN COURS"}</strong></div>

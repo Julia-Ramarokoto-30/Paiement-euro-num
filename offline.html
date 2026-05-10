@@ -144,7 +144,7 @@
       const title = state.title || s.title;
       const text = state.text || (step === 0 ? s.intro : s.progress);
       clientScreen.innerHTML = `
-        <div class="wallet-card">${brandLogo()}<div class="label">${s.reserve}</div><div class="amount">${money(balance)}</div><div>Support : ${s.label}</div></div>
+        <div class="wallet-card"><div class="label">${s.reserve}</div><div class="amount">${money(balance)}</div><div>Support : ${s.label}</div></div>
         <div class="${statusClass(state)}">${statusContent(state.clientStatus)}</div>
         ${state.visual ? offlineVisual() : ""}
         ${offlineSettlementVisual()}
