@@ -28,6 +28,7 @@
     .status { display: none; margin-top: 14px; padding: 12px; border-radius: 10px; background: #e8f7f1; color: #12805c; font-weight: 900; text-align: center; }
     .status.show { display: block; }
     .status.pending { background: #edf4ff; color: #173f8a; }
+    .status.refused { background: #fff1f3; color: #b42318; }
     .wallet-loader {
       position: relative;
       width: 78px;
@@ -89,11 +90,12 @@
       button.disabled = true;
       status.innerHTML = `<div class="wallet-loader" aria-hidden="true">${stars}</div>Validation PSP client / DESP`;
       status.className = 'status show pending';
-      await fetch('/confirm', { method: 'POST' }).catch(() => {});
+      const confirmUrl = `/confirm?amount=${encodeURIComponent(amount.toFixed(2))}&balance=${encodeURIComponent(params.get('balance') || '')}`;
+      const result = await fetch(confirmUrl, { method: 'POST' }).then(response => response.json()).catch(() => ({ accepted: true }));
       setTimeout(() => {
-        button.textContent = 'Confirmé';
-        status.textContent = 'Paiement accepté';
-        status.className = 'status show';
+        button.textContent = result.accepted ? 'Confirmé' : 'Refusé';
+        status.textContent = result.accepted ? 'Paiement accepté' : 'Paiement refusé - solde insuffisant';
+        status.className = result.accepted ? 'status show' : 'status show refused';
       }, 2600);
     });
   </script>
