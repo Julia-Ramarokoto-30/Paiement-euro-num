@@ -25,6 +25,7 @@
     .row strong { text-align: right; }
     button { width: 100%; min-height: 52px; margin-top: 16px; border: 0; border-radius: 10px; background: #007781; color: #fff; cursor: pointer; font: inherit; font-weight: 900; }
     button:disabled { background: #12805c; cursor: default; }
+    button.refused:disabled { background: #b42318; }
     .status { display: none; margin-top: 14px; padding: 12px; border-radius: 10px; background: #e8f7f1; color: #12805c; font-weight: 900; text-align: center; }
     .status.show { display: block; }
     .status.pending { background: #edf4ff; color: #173f8a; }
@@ -94,7 +95,8 @@
       const result = await fetch(confirmUrl, { method: 'POST' }).then(response => response.json()).catch(() => ({ accepted: true }));
       setTimeout(() => {
         button.textContent = result.accepted ? 'Confirmé' : 'Refusé';
-        status.textContent = result.accepted ? 'Paiement accepté' : 'Paiement refusé - solde insuffisant';
+        button.className = result.accepted ? '' : 'refused';
+        status.textContent = result.accepted ? 'Paiement accepté' : 'La transaction a échoué';
         status.className = result.accepted ? 'status show' : 'status show refused';
       }, 2600);
     });
