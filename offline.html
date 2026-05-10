@@ -53,6 +53,10 @@
     .card { margin-top:12px; padding:14px; border:1px solid var(--line); border-radius:8px; background:#fff; }
     .card strong { display:block; margin-bottom:5px; font-size:15px; }
     .card p { margin:0; color:#455468; line-height:1.45; }
+    .product-picker { display:grid; gap:8px; margin-top:12px; padding:14px; border:1px solid var(--line); border-radius:8px; background:#fff; }
+    .product-picker button { display:grid; grid-template-columns:1fr auto; gap:10px; align-items:center; min-height:42px; padding:9px 10px; border:1px solid var(--line); border-radius:8px; background:#fff; color:var(--ink); cursor:pointer; font-weight:900; text-align:left; }
+    .product-picker button.active { border-color:var(--brand); background:#e8f7f1; color:var(--brand-dark); }
+    .product-picker span { color:var(--muted); font-weight:900; white-space:nowrap; }
     .offline-sync { display:grid; grid-template-columns:1fr auto; gap:12px; align-items:center; margin-top:12px; padding:13px 14px; border:1px solid #f1d49b; border-radius:8px; background:#fff8ea; }
     .offline-sync span { color:#8a5a13; font-size:12px; font-weight:800; text-transform:uppercase; }
     .offline-sync strong { display:block; color:#7a4300; font-size:14px; }
@@ -180,6 +184,17 @@
 
     function brandLogo() { return `<div class="brand-logo transavia" aria-label="Logo Transavia">transavia</div>`; }
 
+    function productPicker() {
+      if (step !== 0 || paymentRefused) return "";
+      const options = sales.map((sale, index) => `
+        <button class="${index === saleIndex ? "active" : ""}" type="button" data-sale-index="${index}">
+          ${sale.article}
+          <span>${money(sale.amount)}</span>
+        </button>
+      `).join("");
+      return `<div class="product-picker" aria-label="Choix article"><div class="label">Choisir un achat</div>${options}</div>`;
+    }
+
     function renderClient() {
       const state = current();
       const s = currentSupport();
@@ -190,6 +205,7 @@
       const nextButtonLabel = state.refused || state.accepted ? "Nouvelle vente" : "Continuer";
       clientScreen.innerHTML = `
         <div class="wallet-card"><div class="label">Solde puce e-euro offline</div><div class="amount">${money(balance)}</div><div>Support : ${s.label}</div></div>
+        ${productPicker()}
         <div class="${statusClass(state)}">${statusContent(state.clientStatus)}</div>
         ${state.visual ? offlineVisual() : ""}
         ${offlineSettlementVisual()}
@@ -258,12 +274,13 @@
       paymentRefused = false;
       receiptVisible = false;
     }
-    function advanceSale() {
-      saleIndex = (saleIndex + 1) % sales.length;
+    function selectSale(nextSaleIndex) {
+      saleIndex = nextSaleIndex;
+      resetSaleFlow();
+      render();
     }
     function next() {
       if (paymentRefused || step === flowBase.length - 1) {
-        advanceSale();
         resetSaleFlow();
       } else {
         step += 1;
@@ -291,6 +308,8 @@
     document.addEventListener("click", event => {
       const supportButton = event.target.closest("[data-support]");
       if (supportButton) setSupport(supportButton.dataset.support);
+      const saleButton = event.target.closest("[data-sale-index]");
+      if (saleButton) selectSale(Number(saleButton.dataset.saleIndex));
       const action = event.target.closest("[data-action]")?.dataset.action;
       if (action === "next") next();
       if (action === "back") back();
