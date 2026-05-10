@@ -140,6 +140,18 @@
     .status.show { display: block; }
     .status.error { background: #fff7e6; color: var(--warn); }
 
+    .initial-editor {
+      display: none;
+      gap: 14px;
+      margin-top: 14px;
+      padding: 14px;
+      border: 1px solid var(--line);
+      border-radius: 8px;
+      background: #f8fbfd;
+    }
+
+    .initial-editor.show { display: grid; }
+
     .actions {
       display: grid;
       grid-template-columns: 1fr 1fr;
@@ -157,6 +169,17 @@
       font-weight: 900;
       text-decoration: none;
       cursor: pointer;
+    }
+
+    .edit-balance {
+      width: 100%;
+      min-height: 42px;
+      margin-top: 14px;
+      border: 1px solid rgba(255,255,255,.36);
+      border-radius: 8px;
+      background: rgba(255,255,255,.12);
+      color: #fff;
+      font-size: 13px;
     }
 
     button {
@@ -193,6 +216,7 @@
         <div class="label">Solde actuel</div>
         <div class="amount" id="balance">184,60 €</div>
         <div>Alias client : CLT-92B7-F31D</div>
+        <button class="edit-balance" id="toggleInitialEditor" type="button">Modifier solde initial</button>
       </div>
 
       <form id="topupForm">
@@ -208,6 +232,18 @@
           <button id="submitButton" type="submit">Recharger</button>
         </div>
       </form>
+
+      <form class="initial-editor" id="initialEditor">
+        <p class="helper">Définissez le solde initial du wallet. La valeur sera aussi appliquée sur la page principale.</p>
+        <label>
+          Solde initial
+          <input id="initialBalance" name="initialBalance" type="number" min="0" step="0.01" inputmode="decimal" required>
+        </label>
+        <div class="actions">
+          <button class="secondary" id="cancelInitialEditor" type="button">Annuler</button>
+          <button type="submit">Enregistrer</button>
+        </div>
+      </form>
     </section>
   </main>
   <script>
@@ -221,13 +257,31 @@
     const statusNode = document.querySelector("#status");
     const amountInput = document.querySelector("#topupAmount");
     const submitButton = document.querySelector("#submitButton");
+    const initialEditor = document.querySelector("#initialEditor");
+    const initialBalanceInput = document.querySelector("#initialBalance");
 
     function showStatus(message, error = false) {
       statusNode.textContent = message;
       statusNode.className = `status show${error ? " error" : ""}`;
     }
 
+    function saveBalance(nextBalance) {
+      balance = nextBalance;
+      localStorage.setItem(walletBalanceKey, String(balance));
+      balanceNode.textContent = money(balance);
+    }
+
     balanceNode.textContent = money(balance);
+
+    document.querySelector("#toggleInitialEditor").addEventListener("click", () => {
+      initialBalanceInput.value = balance.toFixed(2);
+      initialEditor.classList.toggle("show");
+      statusNode.className = "status";
+    });
+
+    document.querySelector("#cancelInitialEditor").addEventListener("click", () => {
+      initialEditor.classList.remove("show");
+    });
 
     document.querySelector("#topupForm").addEventListener("submit", event => {
       event.preventDefault();
@@ -243,13 +297,28 @@
       setTimeout(() => {
         const nextBalance = balance + amount;
         const limited = nextBalance > maxBalance;
-        balance = limited ? maxBalance : nextBalance;
-        localStorage.setItem(walletBalanceKey, String(balance));
-        balanceNode.textContent = money(balance);
+        saveBalance(limited ? maxBalance : nextBalance);
         submitButton.disabled = false;
         submitButton.textContent = "Recharger";
-        showStatus(limited ? "Votre solde ne peut exceder 3000 euros." : `Wallet rechargé de ${money(amount)}.`, limited);
+        if (limited) {
+          showStatus("Votre solde ne peut exceder 3000 euros.", true);
+          return;
+        }
+        showStatus(`Wallet rechargé de ${money(amount)}.`);
       }, 1200);
+    });
+
+    initialEditor.addEventListener("submit", event => {
+      event.preventDefault();
+      const nextBalance = Number(initialBalanceInput.value);
+      if (!Number.isFinite(nextBalance) || nextBalance < 0) {
+        showStatus("Saisissez un solde positif.", true);
+        return;
+      }
+      const limited = nextBalance > maxBalance;
+      saveBalance(limited ? maxBalance : nextBalance);
+      initialEditor.classList.remove("show");
+      showStatus(limited ? "Votre solde ne peut exceder 3000 euros." : `Solde initial modifié à ${money(balance)}.`, limited);
     });
   </script>
 </body>
