@@ -114,7 +114,7 @@
     const flowBase = [
       { clientStatus:"Présenter le support au TPE", merchantStatus:"Mode hors ligne actif", merchantTitle:"Attente support", merchantText:"Aucune connexion réseau nécessaire pour accepter le paiement.", visual:true },
       { clientStatus:"Validation du paiement", merchantStatus:"Validation en cours", title:"Paiement en cours", merchantTitle:"Contrôle hors ligne", merchantText:"Le paiement est contrôlé localement, sans connexion réseau." },
-      { clientStatus:"Paiement refusé", merchantStatus:"Paiement refusé", merchantTitle:"Vente traitée hors ligne", merchantText:"La vente est conservée localement et sera synchronisée à la reconnexion.", accepted:true }
+      { clientStatus:"Paiement accepté", merchantStatus:"Paiement accepté", merchantTitle:"Vente traitée hors ligne", merchantText:"La vente est conservée localement et sera synchronisée à la reconnexion.", accepted:true }
     ];
     let step = 0;
     let support = "phone";
@@ -201,7 +201,7 @@
       const sale = currentSale();
       const balance = getOfflineBalance();
       const title = state.title || s.title;
-      const text = state.accepted ? `${sale.label} - ${money(sale.amount)}` : state.text || (step === 0 ? s.intro : s.progress);
+      const text = state.accepted ? `Montant réglé : ${money(sale.amount)}` : state.text || (step === 0 ? s.intro : s.progress);
       const nextButtonLabel = state.refused || state.accepted ? "Nouvelle vente" : "Continuer";
       clientScreen.innerHTML = `
         <div class="wallet-card"><div class="label">Solde puce e-euro offline</div><div class="amount">${money(balance)}</div><div>Support : ${s.label}</div></div>
