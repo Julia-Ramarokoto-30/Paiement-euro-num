@@ -212,7 +212,10 @@
   </main>
   <script>
     const maxBalance = 3000;
-    let balance = 184.60;
+    const walletBalanceKey = "eeurWalletBalance";
+    const defaultWalletBalance = 184.60;
+    const storedBalance = Number(localStorage.getItem(walletBalanceKey));
+    let balance = Number.isFinite(storedBalance) ? storedBalance : defaultWalletBalance;
     const money = value => value.toLocaleString("fr-FR", { style: "currency", currency: "EUR" });
     const balanceNode = document.querySelector("#balance");
     const statusNode = document.querySelector("#status");
@@ -223,6 +226,8 @@
       statusNode.textContent = message;
       statusNode.className = `status show${error ? " error" : ""}`;
     }
+
+    balanceNode.textContent = money(balance);
 
     document.querySelector("#topupForm").addEventListener("submit", event => {
       event.preventDefault();
@@ -239,6 +244,7 @@
         const nextBalance = balance + amount;
         const limited = nextBalance > maxBalance;
         balance = limited ? maxBalance : nextBalance;
+        localStorage.setItem(walletBalanceKey, String(balance));
         balanceNode.textContent = money(balance);
         submitButton.disabled = false;
         submitButton.textContent = "Recharger";

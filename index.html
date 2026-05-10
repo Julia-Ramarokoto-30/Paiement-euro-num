@@ -593,6 +593,13 @@
     const clientScreen = document.querySelector("#clientScreen");
     const merchantScreen = document.querySelector("#merchantScreen");
     const money = value => value.toLocaleString("fr-FR", { style: "currency", currency: "EUR" });
+    const walletBalanceKey = "eeurWalletBalance";
+    const defaultWalletBalance = 184.60;
+
+    function getWalletBalance() {
+      const storedBalance = Number(localStorage.getItem(walletBalanceKey));
+      return Number.isFinite(storedBalance) ? storedBalance : defaultWalletBalance;
+    }
 
     function current() {
       return flows[mode][step];
@@ -654,7 +661,8 @@
 
     function renderClient() {
       const state = current();
-      const balance = state.accepted ? 184.60 - sale.amount : 184.60;
+      const walletBalance = getWalletBalance();
+      const balance = state.accepted ? walletBalance - sale.amount : walletBalance;
       clientScreen.innerHTML = `
         <div class="wallet-card">
           <div class="label">Wallet euro numérique</div>
@@ -779,6 +787,8 @@
     }, 1200);
 
     render();
+
+    window.addEventListener("pageshow", render);
   </script>
 </body>
 </html>
