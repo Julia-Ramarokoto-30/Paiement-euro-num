@@ -163,7 +163,7 @@
         ${state.visual ? offlineVisual() : ""}
         ${offlineSettlementVisual()}
         <div class="card"><strong>${state.merchantTitle}</strong><p>${state.merchantText}</p></div>
-        <div class="ticket" aria-label="Ticket commerçant"><div class="ticket-row"><span>Marchand</span><strong>${sale.merchant}</strong></div><div class="ticket-row"><span>Article</span><strong>Parfum Miss Dior</strong></div><div class="ticket-row"><span>Montant</span><strong>${money(sale.amount)}</strong></div><div class="ticket-row"><span>Rail</span><strong>${s.rail}</strong></div><div class="ticket-row"><span>Statut</span><strong>${state.accepted ? "ACCEPTÉ LOCAL" : "EN COURS"}</strong></div><div class="ticket-row"><span>Ref.</span><strong>${sale.reference}</strong></div></div>
+        <div class="ticket" aria-label="Ticket commerçant"><div class="ticket-row"><span>Marchand</span><strong>${sale.merchant}</strong></div><div class="ticket-row"><span>Article</span><strong>Duty free - Parfum Miss Dior</strong></div><div class="ticket-row"><span>Montant</span><strong>${money(sale.amount)}</strong></div><div class="ticket-row"><span>Rail</span><strong>${s.rail}</strong></div><div class="ticket-row"><span>Statut</span><strong>${state.accepted ? "ACCEPTÉ LOCAL" : "EN COURS"}</strong></div><div class="ticket-row"><span>Ref.</span><strong>${sale.reference}</strong></div></div>
         <div class="actions"><button class="secondary" type="button" data-action="back">Retour</button><button class="primary" type="button" data-action="next">${state.accepted ? "Nouvelle vente" : "Continuer"}</button></div>
       `;
     }
