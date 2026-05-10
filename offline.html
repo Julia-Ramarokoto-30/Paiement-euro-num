@@ -237,7 +237,7 @@
         </div>
       ` : "";
       merchantScreen.innerHTML = `
-        <div class="merchant-total">${brandLogo()}<div class="label">Montant</div><div class="amount">${money(sale.amount)}</div><strong>${sale.label}</strong></div>
+        <div class="merchant-total">${brandLogo()}<div class="label">Montant</div><div class="amount">${money(sale.amount)}</div></div>
         <div class="offline-sync" aria-label="Ventes offline en attente de synchronisation"><div><span>File offline TPE</span><strong>${offlinePending.count} vente${offlinePending.count > 1 ? "s" : ""} à synchroniser</strong><em>${offlinePending.count === 0 ? transferMessage : state.accepted ? "Paiement ajouté à la file locale" : "Connexion réseau indisponible"}</em></div><div class="offline-amount">${money(offlinePending.amount)}</div><button class="clear-offline" type="button" data-action="clear-offline" ${offlinePending.count === 0 ? "disabled" : ""}>Vider les transactions offline</button></div>
         <div class="${statusClass(state)}">${statusContent(state.merchantStatus)}</div>
         ${state.visual ? offlineVisual() : ""}
