@@ -561,6 +561,8 @@
     };
 
     const appOrigin = window.location.origin && window.location.origin !== "null" ? window.location.origin : "http://localhost:8765";
+    const walletBalanceKey = "eeurWalletBalance";
+    const defaultWalletBalance = 184.60;
     const saleParams = new URLSearchParams({
       merchant: sale.merchant,
       amount: sale.amount.toFixed(2),
@@ -660,8 +662,6 @@
     const clientScreen = document.querySelector("#clientScreen");
     const merchantScreen = document.querySelector("#merchantScreen");
     const money = value => value.toLocaleString("fr-FR", { style: "currency", currency: "EUR" });
-    const walletBalanceKey = "eeurWalletBalance";
-    const defaultWalletBalance = 184.60;
 
     function getWalletBalance() {
       const storedBalance = Number(localStorage.getItem(walletBalanceKey));
