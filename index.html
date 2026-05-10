@@ -89,6 +89,21 @@
       color: var(--brand-dark);
     }
 
+    .offline-link {
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      min-height: 36px;
+      margin-top: 8px;
+      border: 1px solid rgba(255,255,255,.36);
+      border-radius: 8px;
+      color: #fff;
+      text-decoration: none;
+      font-size: 13px;
+      font-weight: 900;
+      background: rgba(255,255,255,.12);
+    }
+
     .workspace {
       display: grid;
       grid-template-columns: 1fr 1fr;
@@ -425,9 +440,12 @@
         <h1>Paiement en euro numérique</h1>
         <p class="lede">Deux vues synchronisées : ce que voit le client, et ce que voit le commerçant sur son TPE.</p>
       </div>
-      <div class="mode-switch" aria-label="Choix du mode de paiement">
-        <button class="active" type="button" data-mode="qr">QR</button>
-        <button type="button" data-mode="nfc">NFC</button>
+      <div>
+        <div class="mode-switch" aria-label="Choix du mode de paiement">
+          <button class="active" type="button" data-mode="qr">QR</button>
+          <button type="button" data-mode="nfc">NFC</button>
+        </div>
+        <a class="offline-link" href="offline.html">Mode hors ligne</a>
       </div>
     </header>
 

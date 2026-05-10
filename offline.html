@@ -1,0 +1,205 @@
+<!doctype html>
+<html lang="fr">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Mockup paiement e-EUR hors ligne</title>
+  <style>
+    :root {
+      color-scheme: light;
+      --ink: #172033;
+      --muted: #667085;
+      --line: #d9e2ec;
+      --panel: #ffffff;
+      --brand: #007781;
+      --brand-dark: #03515a;
+      --blue: #173f8a;
+      --ok: #12805c;
+      --wait: #a15c07;
+      --shadow: 0 22px 60px rgba(13, 35, 58, 0.16);
+      font-family: Inter, ui-sans-serif, system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif;
+    }
+
+    * { box-sizing: border-box; }
+    body { margin: 0; min-height: 100vh; background: linear-gradient(135deg, #08777f, #163f86); color: var(--ink); }
+    button { font: inherit; }
+    main { width: min(1120px, calc(100% - 32px)); margin: 0 auto; padding: 28px 0 34px; }
+    header { display: grid; grid-template-columns: 1fr auto; gap: 18px; align-items: end; margin-bottom: 18px; color: #fff; }
+    h1 { margin: 0; font-size: clamp(30px, 4vw, 48px); line-height: 1.04; letter-spacing: 0; }
+    .lede { max-width: 760px; margin: 10px 0 0; color: rgba(255,255,255,.86); font-size: 16px; line-height: 1.5; }
+    .nav-button { display: inline-flex; align-items: center; justify-content: center; min-height: 40px; padding: 8px 14px; border: 1px solid rgba(255,255,255,.36); border-radius: 8px; background: rgba(255,255,255,.14); color: #fff; text-decoration: none; font-weight: 900; }
+    .workspace { display: grid; grid-template-columns: 1fr 1fr; gap: 18px; align-items: start; }
+    .device { overflow: hidden; border: 1px solid rgba(255,255,255,.28); border-radius: 8px; background: var(--panel); box-shadow: var(--shadow); }
+    .device-top { display: flex; justify-content: space-between; gap: 10px; padding: 13px 16px; border-bottom: 1px solid var(--line); color: var(--muted); font-size: 12px; font-weight: 900; text-transform: uppercase; }
+    .screen { min-height: 660px; padding: 18px; background: linear-gradient(#fff, #f8fbfd); }
+    .label { margin-bottom: 6px; color: var(--muted); font-size: 11px; font-weight: 900; letter-spacing: .08em; text-transform: uppercase; }
+    .wallet-card { padding: 16px; border-radius: 8px; background: #102033; color: #fff; }
+    .wallet-card .label { color: rgba(255,255,255,.64); }
+    .amount { margin: 4px 0 12px; color: var(--brand-dark); font-size: clamp(40px, 6vw, 58px); font-weight: 900; letter-spacing: 0; }
+    .wallet-card .amount { color: #fff; }
+    .merchant-total { padding: 18px; border-radius: 8px; background: #f5fbfb; border: 1px solid #cbe4e7; }
+    .status { display: flex; align-items: center; min-height: 46px; margin: 14px 0; padding: 11px 13px; border-radius: 8px; background: #e8f7f1; color: var(--ok); font-weight: 900; }
+    .status.waiting { background: #fff7e6; color: var(--wait); }
+    .status.neutral { background: #edf4ff; color: var(--blue); }
+    .smart-card-visual { display: grid; place-items: center; min-height: 238px; margin: 14px 0; padding: 18px; border: 1px solid var(--line); border-radius: 8px; background: linear-gradient(135deg, #f7fbff, #fff); text-align: center; }
+    .smart-card { position: relative; width: min(100%, 280px); aspect-ratio: 1.58; border-radius: 14px; background: linear-gradient(135deg, #102033, #173f8a); color: #fff; box-shadow: 0 18px 34px rgba(16, 32, 51, .2); padding: 18px; text-align: left; }
+    .chip { width: 48px; height: 36px; border-radius: 7px; background: linear-gradient(135deg, #f4c96b, #b88617); margin-bottom: 22px; }
+    .smart-card strong { display: block; font-size: 18px; }
+    .smart-card span { display: block; margin-top: 8px; color: rgba(255,255,255,.72); font-size: 13px; font-weight: 800; }
+    .tap-symbol { margin-top: 12px; color: var(--brand-dark); font-weight: 900; }
+    .card { margin-top: 12px; padding: 14px; border: 1px solid var(--line); border-radius: 8px; background: #fff; }
+    .card strong { display: block; margin-bottom: 5px; font-size: 15px; }
+    .card p { margin: 0; color: #455468; line-height: 1.45; }
+    .offline-sync { display: grid; grid-template-columns: 1fr auto; gap: 12px; align-items: center; margin-top: 12px; padding: 13px 14px; border: 1px solid #f1d49b; border-radius: 8px; background: #fff8ea; }
+    .offline-sync span { color: #8a5a13; font-size: 12px; font-weight: 800; text-transform: uppercase; }
+    .offline-sync strong { display: block; color: #7a4300; font-size: 14px; }
+    .offline-sync em { display: block; margin-top: 3px; color: #946113; font-size: 12px; font-style: normal; font-weight: 700; }
+    .offline-amount { color: #7a4300; font-size: 22px; font-weight: 950; text-align: right; white-space: nowrap; }
+    .ticket { display: grid; gap: 9px; margin-top: 14px; padding: 14px; border: 1px dashed #9aa8b7; border-radius: 8px; background: #fff; font-family: ui-monospace, SFMono-Regular, Menlo, Consolas, monospace; font-size: 13px; color: #344054; }
+    .ticket-row { display: flex; justify-content: space-between; gap: 12px; }
+    .actions { display: grid; grid-template-columns: 1fr 1fr; gap: 10px; margin-top: 14px; }
+    .primary, .secondary { min-height: 46px; border-radius: 8px; cursor: pointer; font-weight: 900; }
+    .primary { border: 0; background: var(--brand); color: #fff; }
+    .secondary { border: 1px solid var(--line); background: #fff; color: var(--brand-dark); }
+    @media (max-width: 900px) { header, .workspace { grid-template-columns: 1fr; } .screen { min-height: auto; } .actions { grid-template-columns: 1fr; } }
+  </style>
+</head>
+<body>
+  <main>
+    <header>
+      <div>
+        <h1>Paiement hors ligne</h1>
+        <p class="lede">Simulation e-EUR sans QR code : le client présente une smart card au TPE, le paiement est accepté localement puis synchronisé plus tard.</p>
+      </div>
+      <a class="nav-button" href="index.html">Mode connecté</a>
+    </header>
+    <section class="workspace" aria-label="Mockup paiement euro numérique hors ligne">
+      <article class="device" aria-label="Écran client">
+        <div class="device-top"><span>Client</span><span>Smart card</span></div>
+        <div class="screen" id="clientScreen"></div>
+      </article>
+      <article class="device" aria-label="Écran commerçant">
+        <div class="device-top"><span>Commerçant</span><span>TPE offline</span></div>
+        <div class="screen" id="merchantScreen"></div>
+      </article>
+    </section>
+  </main>
+
+  <script>
+    const sale = { merchant: "Boulangerie Rémi", amount: 12.40, label: "Formule déjeuner", reference: "OFF-EUR-240426-03", alias: "MRC-8F3A-214C" };
+    const offlinePending = { count: 4, amount: 60.20 };
+    const flows = [
+      {
+        clientStatus: "Présenter la smart card au TPE",
+        merchantStatus: "Mode hors ligne actif",
+        title: "Paiement par smart card",
+        text: "La carte contient une réserve e-EUR préchargée dans une puce sécurisée.",
+        merchantTitle: "Attente carte",
+        merchantText: "Aucune connexion réseau nécessaire pour accepter le paiement.",
+        visual: true
+      },
+      {
+        clientStatus: "Authentification locale de la puce",
+        merchantStatus: "Vérification du token signé",
+        title: "Échange puce à puce",
+        text: "La smart card signe localement le paiement avec un token unique.",
+        merchantTitle: "Contrôle offline",
+        merchantText: "Le TPE vérifie le token et le compteur anti-rejeu sans interroger le serveur."
+      },
+      {
+        clientStatus: "Paiement accepté",
+        merchantStatus: "Accepté - synchro en attente",
+        title: "Ticket smart card",
+        text: "Boulangerie Rémi - 12,40 €",
+        merchantTitle: "Vente acceptée localement",
+        merchantText: "La vente est ajoutée à la file offline et sera transmise à la reconnexion.",
+        accepted: true
+      }
+    ];
+
+    let step = 0;
+    const clientScreen = document.querySelector("#clientScreen");
+    const merchantScreen = document.querySelector("#merchantScreen");
+    const money = value => value.toLocaleString("fr-FR", { style: "currency", currency: "EUR" });
+    const current = () => flows[step];
+    const statusClass = state => state.accepted ? "status" : step === 1 ? "status neutral" : "status waiting";
+
+    function smartCardVisual() {
+      return `
+        <div class="smart-card-visual">
+          <div>
+            <div class="smart-card">
+              <div class="chip"></div>
+              <strong>Smart card e-EUR</strong>
+              <span>Solde offline disponible : 84,20 €</span>
+            </div>
+            <div class="tap-symbol">Présenter au TPE</div>
+          </div>
+        </div>
+      `;
+    }
+
+    function renderClient() {
+      const state = current();
+      const balance = state.accepted ? 84.20 - sale.amount : 84.20;
+      clientScreen.innerHTML = `
+        <div class="wallet-card">
+          <div class="label">Réserve e-EUR offline</div>
+          <div class="amount">${money(balance)}</div>
+          <div>Support : smart card sécurisée</div>
+        </div>
+        <div class="${statusClass(state)}">${state.clientStatus}</div>
+        ${state.visual ? smartCardVisual() : ""}
+        <div class="card"><strong>${state.title}</strong><p>${state.text}</p></div>
+        <div class="actions">
+          <button class="secondary" type="button" data-action="back">Retour</button>
+          <button class="primary" type="button" data-action="next">${state.accepted ? "Nouvelle vente" : "Continuer"}</button>
+        </div>
+      `;
+    }
+
+    function renderMerchant() {
+      const state = current();
+      merchantScreen.innerHTML = `
+        <div class="merchant-total">
+          <div class="label">Montant</div>
+          <div class="amount">${money(sale.amount)}</div>
+          <strong>${sale.label}</strong>
+        </div>
+        <div class="offline-sync" aria-label="Ventes offline en attente de synchronisation">
+          <div>
+            <span>File offline TPE</span>
+            <strong>${offlinePending.count} ventes à synchroniser</strong>
+            <em>${state.accepted ? "Paiement ajouté à la file locale" : "Connexion réseau indisponible"}</em>
+          </div>
+          <div class="offline-amount">${money(offlinePending.amount)}</div>
+        </div>
+        <div class="${statusClass(state)}">${state.merchantStatus}</div>
+        ${state.visual ? smartCardVisual() : ""}
+        <div class="card"><strong>${state.merchantTitle}</strong><p>${state.merchantText}</p></div>
+        <div class="ticket" aria-label="Ticket commerçant">
+          <div class="ticket-row"><span>Marchand</span><strong>${sale.merchant}</strong></div>
+          <div class="ticket-row"><span>Montant</span><strong>${money(sale.amount)}</strong></div>
+          <div class="ticket-row"><span>Rail</span><strong>e-EUR / offline / smart card</strong></div>
+          <div class="ticket-row"><span>Statut</span><strong>${state.accepted ? "ACCEPTÉ LOCAL" : "EN COURS"}</strong></div>
+          <div class="ticket-row"><span>Ref.</span><strong>${sale.reference}</strong></div>
+        </div>
+        <div class="actions">
+          <button class="secondary" type="button" data-action="back">Retour</button>
+          <button class="primary" type="button" data-action="next">${state.accepted ? "Nouvelle vente" : "Continuer"}</button>
+        </div>
+      `;
+    }
+
+    function render() { renderClient(); renderMerchant(); }
+    function next() { step = step === flows.length - 1 ? 0 : step + 1; render(); }
+    function back() { step = Math.max(0, step - 1); render(); }
+    document.addEventListener("click", event => {
+      const action = event.target.closest("[data-action]")?.dataset.action;
+      if (action === "next") next();
+      if (action === "back") back();
+    });
+    render();
+  </script>
+</body>
+</html>
