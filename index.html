@@ -155,6 +155,22 @@
 
     .wallet-card .label { color: rgba(255,255,255,.64); }
 
+    .wallet-action {
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      min-height: 40px;
+      margin-top: 14px;
+      padding: 8px 13px;
+      border: 1px solid rgba(255,255,255,.36);
+      border-radius: 8px;
+      background: rgba(255,255,255,.12);
+      color: #fff;
+      text-decoration: none;
+      font-size: 13px;
+      font-weight: 900;
+    }
+
     .amount {
       margin: 4px 0 12px;
       color: var(--brand-dark);
@@ -644,6 +660,7 @@
           <div class="label">Wallet euro numérique</div>
           <div class="amount">${money(balance)}</div>
           <div>Alias client : CLT-92B7-F31D</div>
+          <a class="wallet-action" href="recharger-wallet.html">Recharger mon wallet</a>
         </div>
         <div class="${statusClass(state)}">${statusContent(state.clientStatus)}</div>
         ${paymentVisual(state, "client")}
