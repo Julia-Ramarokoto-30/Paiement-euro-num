@@ -808,10 +808,6 @@
           <p>${state.merchantText}</p>
         </div>
         ${state.accepted ? `
-          <div class="reconciliation" aria-label="Réconciliation commerçant">
-            Réconciliation terminée
-            <span>Vente rapprochée avec le règlement e-EUR. Reporting commerçant prêt.</span>
-          </div>
           <button class="secondary receipt-action" type="button" data-action="generate-receipt">${receiptVisible ? "Masquer le ticket de caisse" : "Imprimer ticket de caisse"}</button>
         ` : ""}
         ${receipt}
