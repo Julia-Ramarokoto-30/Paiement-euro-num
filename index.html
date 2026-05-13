@@ -361,6 +361,107 @@
       text-align: center;
     }
 
+    .qr-camera-shot {
+      position: relative;
+      display: grid;
+      place-items: center;
+      min-height: 330px;
+      margin: 14px 0;
+      padding: 18px;
+      overflow: hidden;
+      border: 1px solid var(--line);
+      border-radius: 8px;
+      background:
+        linear-gradient(180deg, rgba(16, 32, 51, .12), rgba(16, 32, 51, .44)),
+        linear-gradient(135deg, #eef4f8, #c7d5df);
+    }
+
+    .qr-camera-phone {
+      position: relative;
+      width: min(100%, 260px);
+      aspect-ratio: .58;
+      padding: 12px;
+      border: 10px solid #101828;
+      border-radius: 30px;
+      background: #101828;
+      box-shadow: 0 24px 44px rgba(16, 32, 51, .34);
+    }
+
+    .qr-camera-view {
+      position: relative;
+      width: 100%;
+      height: 100%;
+      overflow: hidden;
+      border-radius: 20px;
+      background:
+        radial-gradient(circle at 28% 18%, rgba(255,255,255,.22), transparent 26%),
+        linear-gradient(150deg, #dce8ef, #91a9b7 54%, #667b88);
+    }
+
+    .qr-camera-view::before {
+      content: "";
+      position: absolute;
+      inset: 13px;
+      border: 2px solid rgba(255,255,255,.82);
+      border-radius: 14px;
+      box-shadow: 0 0 0 999px rgba(16, 32, 51, .16);
+    }
+
+    .qr-tpe-photo {
+      position: absolute;
+      left: 50%;
+      top: 52%;
+      width: 168px;
+      padding: 12px 12px 14px;
+      border-radius: 10px;
+      background: linear-gradient(160deg, #26364c, #101828);
+      box-shadow: 0 16px 32px rgba(16, 32, 51, .32);
+      transform: translate(-50%, -50%) rotate(-3deg);
+    }
+
+    .qr-tpe-screen {
+      display: grid;
+      place-items: center;
+      padding: 10px;
+      border-radius: 7px;
+      background: #f8fbfd;
+    }
+
+    .qr-tpe-screen img {
+      display: block;
+      width: 112px;
+      aspect-ratio: 1;
+      image-rendering: pixelated;
+    }
+
+    .qr-tpe-total {
+      margin-top: 8px;
+      color: #fff;
+      font-size: 13px;
+      font-weight: 950;
+      text-align: center;
+    }
+
+    .qr-scan-corners {
+      position: absolute;
+      inset: 42px 34px;
+      border: 2px solid rgba(245, 197, 66, .95);
+      border-radius: 12px;
+      box-shadow: 0 0 18px rgba(245, 197, 66, .28);
+    }
+
+    .qr-camera-ui {
+      position: absolute;
+      left: 50%;
+      bottom: 18px;
+      width: 48px;
+      height: 48px;
+      border: 4px solid rgba(255,255,255,.88);
+      border-radius: 50%;
+      background: rgba(255,255,255,.22);
+      transform: translateX(-50%);
+    }
+
     .nfc-visual {
       display: grid;
       place-items: center;
@@ -729,6 +830,24 @@
 
     function paymentVisual(state, side) {
       if ((side === "client" && state.showQrClient) || (side === "merchant" && state.showQrMerchant)) {
+        if (side === "client") {
+          return `
+            <div class="qr-camera-shot" aria-label="Vue caméra du client scannant le QR code du TPE">
+              <div class="qr-camera-phone">
+                <div class="qr-camera-view">
+                  <div class="qr-tpe-photo">
+                    <div class="qr-tpe-screen">
+                      <img src="${qrUrl}" alt="QR code e-EUR affiché sur le TPE" loading="eager">
+                    </div>
+                    <div class="qr-tpe-total">${money(sale.amount)}</div>
+                  </div>
+                  <div class="qr-scan-corners" aria-hidden="true"></div>
+                  <div class="qr-camera-ui" aria-hidden="true"></div>
+                </div>
+              </div>
+            </div>
+          `;
+        }
         return `
           <div class="qr-box">
             ${brandLogo()}

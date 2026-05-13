@@ -238,7 +238,7 @@
     }
 
     function renderGuide() {
-      const showArticleArrow = step === 0 && !paymentRefused || receiptVisible;
+      const showArticleArrow = step === 0 && !paymentRefused || receiptVisible || paymentRefused;
       demoGuide.innerHTML = `
         <div class="articles-zone">
           <div class="guide-title click-hint"><strong>Articles</strong>${showArticleArrow ? `<span class="click-arrow title-arrow" aria-hidden="true">↓</span>` : ""}</div>
@@ -271,7 +271,7 @@
         ${state.visual ? offlineVisual() : ""}
         ${offlineSettlementVisual()}
         <div class="card"><strong>${state.accepted ? s.ticket : title}</strong><p>${text}</p></div>
-        ${state.accepted ? "" : `<div class="actions"><button class="secondary" type="button" data-action="back">Retour</button><button class="primary click-hint" type="button" data-action="next"><span class="click-arrow down" aria-hidden="true">↓</span>${nextButtonLabel}</button></div>`}
+        ${state.accepted || state.refused ? "" : `<div class="actions"><button class="secondary" type="button" data-action="back">Retour</button><button class="primary click-hint" type="button" data-action="next"><span class="click-arrow down" aria-hidden="true">↓</span>${nextButtonLabel}</button></div>`}
       `;
     }
 
