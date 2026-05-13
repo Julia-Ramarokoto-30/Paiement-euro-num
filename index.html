@@ -781,7 +781,7 @@
       qr: [
         {
           clientStatus: "Scanner le QR code présenté par le commerçant",
-          merchantStatus: "QR e-EUR affiché",
+          merchantStatus: "",
           clientTitle: "",
           clientText: "",
           merchantTitle: "Demande de paiement",
@@ -817,7 +817,7 @@
       nfc: [
         {
           clientStatus: "Approcher le téléphone du TPE",
-          merchantStatus: "Présentez le téléphone",
+          merchantStatus: "",
           clientTitle: "",
           clientText: "",
           merchantTitle: "Montant prêt",
@@ -1042,7 +1042,7 @@
           <div class="label">Montant</div>
           <div class="amount">${money(sale.amount)}</div>
         </div>
-        <div class="${statusClass(state)}">${statusContent(state.merchantStatus)}</div>
+        ${state.merchantStatus ? `<div class="${statusClass(state)}">${statusContent(state.merchantStatus)}</div>` : ""}
         ${paymentVisual(state, "merchant")}
         ${settlementVisual()}
         <div class="card">
