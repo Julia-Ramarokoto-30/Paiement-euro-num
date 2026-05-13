@@ -423,7 +423,7 @@
       left: 50%;
       top: 46%;
       width: min(78%, 265px);
-      padding: 14px 14px 44px;
+      padding: 14px;
       border-radius: 4px;
       background: #fff;
       box-shadow: 0 12px 34px rgba(16, 32, 51, .18);
@@ -443,19 +443,6 @@
       width: 100%;
       aspect-ratio: 1;
       image-rendering: pixelated;
-    }
-
-    .qr-tpe-total {
-      position: absolute;
-      left: 50%;
-      bottom: 13px;
-      width: calc(100% - 24px);
-      color: #173f8a;
-      font-size: 12px;
-      font-weight: 950;
-      line-height: 1.2;
-      text-align: center;
-      transform: translateX(-50%);
     }
 
     .qr-scan-corners {
@@ -862,7 +849,6 @@
                     <div class="qr-tpe-screen">
                       <img src="${qrUrl}" alt="QR code e-EUR affiché sur le TPE" loading="eager">
                     </div>
-                    <div class="qr-tpe-total">Scannez le QR code pour payer ${money(sale.amount)}</div>
                   </div>
                   <div class="qr-scan-corners" aria-hidden="true"></div>
                 </div>
