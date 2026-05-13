@@ -20,6 +20,17 @@
     .support-switch { display:inline-grid; grid-template-columns:1fr 1fr; gap:6px; margin-top:12px; padding:6px; border:1px solid rgba(255,255,255,.36); border-radius:8px; background:rgba(255,255,255,.14); }
     .support-switch button { min-height:38px; min-width:132px; padding:8px 12px; border:0; border-radius:7px; background:transparent; color:rgba(255,255,255,.82); cursor:pointer; font-weight:900; }
     .support-switch button.active { background:#fff; color:var(--brand-dark); }
+    .demo-guide { display:grid; gap:12px; margin:0 0 18px; padding:14px; border:1px solid rgba(255,255,255,.32); border-radius:8px; background:rgba(255,255,255,.92); box-shadow:var(--shadow); }
+    .guide-top { display:grid; grid-template-columns:minmax(260px,.85fr) 1.15fr; gap:14px; align-items:start; }
+    .guide-title { display:flex; align-items:center; justify-content:space-between; gap:12px; margin-bottom:8px; }
+    .guide-title strong { color:var(--brand-dark); font-size:15px; }
+    .guide-title span { color:var(--muted); font-size:12px; font-weight:800; }
+    .flow-bubbles { display:grid; grid-template-columns:repeat(4,1fr); gap:8px; }
+    .flow-bubble { position:relative; min-height:86px; padding:10px 10px 10px 12px; border:1px solid var(--line); border-radius:8px; background:#fff; color:#455468; font-size:12px; line-height:1.32; box-shadow:0 8px 22px rgba(13,35,58,.07); opacity:.72; }
+    .flow-bubble::before { content:""; position:absolute; left:13px; top:-5px; width:10px; height:10px; border-left:1px solid var(--line); border-top:1px solid var(--line); background:#fff; transform:rotate(45deg); }
+    .flow-bubble strong { display:block; margin-bottom:5px; color:var(--ink); font-size:12px; }
+    .flow-bubble.active { border-color:#89d6d7; background:#f2fbfb; color:#1f5560; opacity:1; }
+    .flow-bubble.active::before { border-color:#89d6d7; background:#f2fbfb; }
     .workspace { display:grid; grid-template-columns:1fr 1fr; gap:18px; align-items:start; }
     .device { overflow:hidden; border:1px solid rgba(255,255,255,.28); border-radius:8px; background:var(--panel); box-shadow:var(--shadow); }
     .device-top { display:flex; justify-content:space-between; gap:10px; padding:13px 16px; border-bottom:1px solid var(--line); color:var(--muted); font-size:12px; font-weight:900; text-transform:uppercase; }
@@ -57,9 +68,14 @@
     .card strong { display:block; margin-bottom:5px; font-size:15px; }
     .card p { margin:0; color:#455468; line-height:1.45; }
     .product-picker { display:grid; gap:8px; margin-top:12px; padding:14px; border:1px solid var(--line); border-radius:8px; background:#fff; }
+    .demo-guide .product-picker { margin-top:0; padding:12px; background:#f8fbfd; }
     .product-picker button { display:grid; grid-template-columns:1fr auto; gap:10px; align-items:center; min-height:42px; padding:9px 10px; border:1px solid var(--line); border-radius:8px; background:#fff; color:var(--ink); cursor:pointer; font-weight:900; text-align:left; }
     .product-picker button.active { border-color:var(--brand); background:#e8f7f1; color:var(--brand-dark); }
     .product-picker span { color:var(--muted); font-weight:900; white-space:nowrap; }
+    .sale-summary { display:grid; grid-template-columns:1fr auto; gap:10px; align-items:center; min-height:58px; padding:12px; border:1px solid var(--line); border-radius:8px; background:#f8fbfd; }
+    .sale-summary strong { display:block; color:var(--ink); font-size:14px; }
+    .sale-summary span { color:var(--brand-dark); font-size:18px; font-weight:950; white-space:nowrap; }
+    .sale-summary em { display:block; margin-top:3px; color:var(--muted); font-size:12px; font-style:normal; font-weight:800; }
     .offline-sync { display:grid; grid-template-columns:1fr auto; gap:12px; align-items:center; margin-top:12px; padding:13px 14px; border:1px solid #f1d49b; border-radius:8px; background:#fff8ea; }
     .offline-sync span { color:#8a5a13; font-size:12px; font-weight:800; text-transform:uppercase; }
     .offline-sync strong { display:block; color:#7a4300; font-size:14px; }
@@ -79,7 +95,8 @@
     .primary,.secondary { min-height:46px; border-radius:8px; cursor:pointer; font-weight:900; }
     .primary { border:0; background:var(--brand); color:#fff; }
     .secondary { border:1px solid var(--line); background:#fff; color:var(--brand-dark); }
-    @media (max-width:900px) { header,.workspace { grid-template-columns:1fr; } .support-switch { width:100%; } .support-switch button { min-width:0; } .screen { min-height:auto; } .actions { grid-template-columns:1fr; } }
+    @media (max-width:900px) { header,.guide-top,.workspace { grid-template-columns:1fr; } .flow-bubbles { grid-template-columns:1fr 1fr; } .support-switch { width:100%; } .support-switch button { min-width:0; } .screen { min-height:auto; } .actions { grid-template-columns:1fr; } }
+    @media (max-width:560px) { .flow-bubbles { grid-template-columns:1fr; } }
   </style>
 </head>
 <body>
@@ -96,6 +113,7 @@
       </div>
       <a class="nav-button" href="index.html">Mode connecté</a>
     </header>
+    <section class="demo-guide" id="demoGuide" aria-label="Guide de parcours hors ligne"></section>
     <section class="workspace" aria-label="Mockup paiement euro numérique hors ligne">
       <article class="device" aria-label="Écran client"><div class="device-top"><span>Client</span><span id="clientSupportLabel">Téléphone NFC</span></div><div class="screen" id="clientScreen"></div></article>
       <article class="device" aria-label="Écran commerçant"><div class="device-top"><span>Commerçant</span><span>TPE offline</span></div><div class="screen" id="merchantScreen"></div></article>
@@ -129,6 +147,7 @@
     const clientScreen = document.querySelector("#clientScreen");
     const merchantScreen = document.querySelector("#merchantScreen");
     const clientSupportLabel = document.querySelector("#clientSupportLabel");
+    const demoGuide = document.querySelector("#demoGuide");
     const money = value => value.toLocaleString("fr-FR", { style:"currency", currency:"EUR" });
     function current() {
       if (paymentRefused) {
@@ -187,8 +206,51 @@
 
     function brandLogo() { return `<div class="brand-logo transavia" aria-label="Logo Transavia"><svg class="transavia-logo" viewBox="0 0 1280 236" aria-hidden="true" focusable="false"><circle cx="118" cy="118" r="118" fill="#00d66c"/><path fill="#fff" d="M99 52c0-13 8-20 20-20s20 7 20 20v30h29c13 0 20 8 20 19s-7 19-20 19h-29v31c0 20 12 30 29 30 10 0 16 5 16 15 0 13-10 20-28 20-36 0-57-23-57-61v-35H67c-12 0-19-8-19-19s7-19 19-19h32V52Z"/><text x="288" y="190" fill="#00d66c" font-family="Inter, Arial, Helvetica, sans-serif" font-size="154" font-weight="900" letter-spacing="-4">transavia</text></svg></div>`; }
 
+    function activeGuideIndex() {
+      if (paymentRefused) return 3;
+      if (step === 0) return 0;
+      if (step === 1) return 2;
+      return 3;
+    }
+
+    function guideBubbles() {
+      const s = currentSupport();
+      const sale = currentSale();
+      const bubbles = [
+        { title:"Étape 1", text:`Le client choisit son article. La démo retient ${sale.article} pour ${money(sale.amount)}.` },
+        { title:"Étape 2", text:"Le commerçant saisit ou confirme le montant sur le TPE offline." },
+        { title:"Étape 3", text:`Le client présente son ${s.short}. Variante connectée : QR code à présenter ou à scanner.` },
+        { title: paymentRefused ? "Blocage" : "Étape 4", text: paymentRefused ? "Le solde est insuffisant : le paiement est refusé localement." : "Le TPE valide hors ligne, puis garde la vente en file de synchronisation." }
+      ];
+      const activeIndex = activeGuideIndex();
+      return bubbles.map((bubble, index) => `
+        <div class="flow-bubble ${index === activeIndex ? "active" : ""}">
+          <strong>${bubble.title}</strong>
+          ${bubble.text}
+        </div>
+      `).join("");
+    }
+
+    function renderGuide() {
+      demoGuide.innerHTML = `
+        <div class="guide-top">
+          <div>
+            <div class="guide-title"><strong>Préparation de la vente</strong><span>Visible hors écrans client / TPE</span></div>
+            ${productPicker()}
+          </div>
+          <div>
+            <div class="guide-title"><strong>Parcours guidé</strong><span>Repères discrets</span></div>
+            <div class="flow-bubbles">${guideBubbles()}</div>
+          </div>
+        </div>
+      `;
+    }
+
     function productPicker() {
-      if (step !== 0 || paymentRefused) return "";
+      if (step !== 0 || paymentRefused) {
+        const sale = currentSale();
+        return `<div class="sale-summary" aria-label="Achat sélectionné"><div><strong>${sale.article}</strong><em>Achat sélectionné pour la démonstration</em></div><span>${money(sale.amount)}</span></div>`;
+      }
       const options = sales.map((sale, index) => `
         <button class="${index === saleIndex ? "active" : ""}" type="button" data-sale-index="${index}">
           ${sale.article}
@@ -208,7 +270,6 @@
       const nextButtonLabel = state.refused || state.accepted ? "Nouvelle vente" : "Continuer";
       clientScreen.innerHTML = `
         <div class="wallet-card"><div class="label">Solde puce e-euro offline</div><div class="amount">${money(balance)}</div><div>Support : ${s.label}</div></div>
-        ${productPicker()}
         <div class="${statusClass(state)}">${statusContent(state.clientStatus)}</div>
         ${state.visual ? offlineVisual() : ""}
         ${offlineSettlementVisual()}
@@ -256,7 +317,7 @@
       document.querySelectorAll("[data-support]").forEach(button => button.classList.toggle("active", button.dataset.support === support));
       clientSupportLabel.textContent = currentSupport().label;
     }
-    function render() { renderSupportButtons(); renderClient(); renderMerchant(); }
+    function render() { renderSupportButtons(); renderGuide(); renderClient(); renderMerchant(); }
     function queueAcceptedPayment() {
       if (acceptedQueued) return;
       const sale = currentSale();
