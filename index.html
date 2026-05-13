@@ -1005,10 +1005,7 @@
           <strong>${state.clientTitle}</strong>
           ${state.clientText ? `<p>${state.clientText}</p>` : ""}
         </div>` : ""}
-        <div class="actions">
-          <button class="secondary" type="button" data-action="back">Retour</button>
-          ${state.accepted || state.refused ? `<button class="primary" type="button" data-action="next">${nextButtonLabel}</button>` : ""}
-        </div>
+        ${state.accepted || state.refused ? `<div class="actions"><button class="primary" type="button" data-action="next">${nextButtonLabel}</button></div>` : ""}
       `;
     }
 
