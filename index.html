@@ -244,6 +244,15 @@
       transform: translateY(-50%) rotate(90deg);
     }
 
+    .status-text {
+      position: relative;
+      display: inline-block;
+    }
+
+    .status-text .click-arrow.wallet-arrow {
+      right: -34px;
+    }
+
     .click-arrow.bubble-arrow {
       left: -34px;
       top: 50%;
@@ -773,8 +782,8 @@
         {
           clientStatus: "Scanner le QR code présenté par le commerçant",
           merchantStatus: "QR e-EUR affiché",
-          clientTitle: "Payer par QR",
-          clientText: "Ouvrez le wallet et scannez le QR du TPE.",
+          clientTitle: "",
+          clientText: "",
           merchantTitle: "Demande de paiement",
           merchantText: "Le QR est prêt pour le client.",
           showQrClient: true,
@@ -809,8 +818,8 @@
         {
           clientStatus: "Approcher le téléphone du TPE",
           merchantStatus: "Présentez le téléphone",
-          clientTitle: "Payer par NFC",
-          clientText: "Le wallet est prêt pour le paiement e-EUR.",
+          clientTitle: "",
+          clientText: "",
           merchantTitle: "Montant prêt",
           merchantText: "Le TPE attend le téléphone du client.",
           showNfcClient: true,
@@ -926,7 +935,14 @@
 
     function scanStatusClass(state) {
       const status = statusClass(state);
-      return mode === "qr" && step === 0 && ["wallet", "scan"].includes(guideStage) ? `${status} click-hint` : status;
+      return step === 0 && (mode === "nfc" || ["wallet", "scan"].includes(guideStage)) ? `${status} click-hint` : status;
+    }
+
+    function statusGuideArrow() {
+      if (step !== 0) return "";
+      if (mode === "nfc") return `<span class="click-arrow wallet-arrow" aria-hidden="true">↓</span>`;
+      if (["wallet", "scan"].includes(guideStage)) return guideArrow(guideStage, "wallet");
+      return "";
     }
 
     function brandLogo(brand = sale.brand) {
@@ -986,13 +1002,13 @@
           <div>Alias client : CLT-92B7-F31D</div>
           <a class="wallet-action ${guideStage === "wallet" ? "click-hint" : ""}" href="recharger-wallet.html">${guideArrow("wallet", "wallet")}Gérer mon wallet</a>
         </div>
-        ${state.clientStatus ? `<div class="${scanStatusClass(state)}">${statusContent(state.clientStatus)}${mode === "qr" && step === 0 && ["wallet", "scan"].includes(guideStage) ? guideArrow(guideStage, "wallet") : ""}</div>` : ""}
-        ${mode === "qr" && state.showQrClient ? "" : paymentVisual(state, "client")}
+        ${state.clientStatus ? `<div class="${scanStatusClass(state)}"><span class="status-text">${statusContent(state.clientStatus)}${statusGuideArrow()}</span></div>` : ""}
+        ${(mode === "qr" && state.showQrClient) || (mode === "nfc" && state.showNfcClient) ? "" : paymentVisual(state, "client")}
         ${settlementVisual()}
-        <div class="card">
+        ${state.clientTitle || state.clientText ? `<div class="card">
           <strong>${state.clientTitle}</strong>
           ${state.clientText ? `<p>${state.clientText}</p>` : ""}
-        </div>
+        </div>` : ""}
         <div class="actions">
           <button class="secondary" type="button" data-action="back">Retour</button>
           <button class="primary ${showContinueArrow ? "click-hint" : ""}" type="button" data-action="next">${showContinueArrow ? guideArrow("continue") : ""}${nextButtonLabel}</button>
