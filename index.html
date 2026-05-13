@@ -924,14 +924,9 @@
       return mode === "qr" && guideStage === target ? `<span class="click-arrow ${arrowClass}" aria-hidden="true">↓</span>` : "";
     }
 
-    function scanGuideBubble() {
-      if (mode !== "qr" || step !== 0 || !["wallet", "scan"].includes(guideStage)) return "";
-      return `
-        <div class="flow-bubble click-hint">
-          <span class="click-arrow down" aria-hidden="true">↓</span>
-          Le client scanne le QR code généré par le TPE.
-        </div>
-      `;
+    function scanStatusClass(state) {
+      const status = statusClass(state);
+      return mode === "qr" && step === 0 && ["wallet", "scan"].includes(guideStage) ? `${status} click-hint` : status;
     }
 
     function brandLogo(brand = sale.brand) {
@@ -991,9 +986,8 @@
           <div>Alias client : CLT-92B7-F31D</div>
           <a class="wallet-action ${guideStage === "wallet" ? "click-hint" : ""}" href="recharger-wallet.html">${guideArrow("wallet", "wallet")}Gérer mon wallet</a>
         </div>
-        ${state.clientStatus ? `<div class="${statusClass(state)}">${statusContent(state.clientStatus)}</div>` : ""}
-        ${scanGuideBubble()}
-        ${paymentVisual(state, "client")}
+        ${state.clientStatus ? `<div class="${scanStatusClass(state)}">${statusContent(state.clientStatus)}${mode === "qr" && step === 0 && ["wallet", "scan"].includes(guideStage) ? guideArrow(guideStage, "wallet") : ""}</div>` : ""}
+        ${mode === "qr" && state.showQrClient ? "" : paymentVisual(state, "client")}
         ${settlementVisual()}
         <div class="card">
           <strong>${state.clientTitle}</strong>
