@@ -930,7 +930,7 @@
 
     function guideArrow(target, variant = "down") {
       const arrowClass = variant === "wallet" ? "wallet-arrow" : variant === "bubble" ? "bubble-arrow" : "down";
-      return mode === "qr" && guideStage === target ? `<span class="click-arrow ${arrowClass}" aria-hidden="true">↓</span>` : "";
+      return (mode === "qr" || mode === "nfc") && guideStage === target ? `<span class="click-arrow ${arrowClass}" aria-hidden="true">↓</span>` : "";
     }
 
     function scanStatusClass(state) {
@@ -994,7 +994,6 @@
       const state = current();
       const balance = getWalletBalance();
       const nextButtonLabel = state.refused ? "Nouvel achat" : state.accepted ? "Nouvel achat" : "Continuer";
-      const showContinueArrow = mode === "qr" && guideStage === "continue" && !state.accepted && !state.refused;
       clientScreen.innerHTML = `
         <div class="wallet-card">
           <div class="label">Wallet euro numérique</div>
@@ -1011,7 +1010,7 @@
         </div>` : ""}
         <div class="actions">
           <button class="secondary" type="button" data-action="back">Retour</button>
-          <button class="primary ${showContinueArrow ? "click-hint" : ""}" type="button" data-action="next">${showContinueArrow ? guideArrow("continue") : ""}${nextButtonLabel}</button>
+          ${state.accepted || state.refused ? `<button class="primary" type="button" data-action="next">${nextButtonLabel}</button>` : ""}
         </div>
       `;
     }
@@ -1056,7 +1055,6 @@
         ${receipt}
         <div class="actions">
           <button class="secondary" type="button" data-action="back">Retour</button>
-          ${state.accepted || state.refused ? "" : `<button class="primary" type="button" data-action="next">${nextButtonLabel}</button>`}
         </div>
       `;
     }
