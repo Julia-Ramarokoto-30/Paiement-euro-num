@@ -371,20 +371,17 @@
       overflow: hidden;
       border: 1px solid var(--line);
       border-radius: 8px;
-      background:
-        linear-gradient(180deg, rgba(16, 32, 51, .12), rgba(16, 32, 51, .44)),
-        linear-gradient(135deg, #eef4f8, #c7d5df);
+      background: #f4f7fa;
     }
 
-    .qr-camera-phone {
+    .qr-camera-frame {
       position: relative;
-      width: min(100%, 260px);
-      aspect-ratio: .58;
-      padding: 12px;
-      border: 10px solid #101828;
-      border-radius: 30px;
-      background: #101828;
-      box-shadow: 0 24px 44px rgba(16, 32, 51, .34);
+      width: min(100%, 250px);
+      aspect-ratio: .56;
+      overflow: hidden;
+      border-radius: 2px;
+      background: #050505;
+      box-shadow: 0 24px 44px rgba(16, 32, 51, .22);
     }
 
     .qr-camera-view {
@@ -392,73 +389,153 @@
       width: 100%;
       height: 100%;
       overflow: hidden;
-      border-radius: 20px;
       background:
-        radial-gradient(circle at 28% 18%, rgba(255,255,255,.22), transparent 26%),
-        linear-gradient(150deg, #dce8ef, #91a9b7 54%, #667b88);
+        linear-gradient(#070707 0 14%, transparent 14% 78%, #040404 78%),
+        radial-gradient(circle at 50% 38%, rgba(255,255,255,.26), transparent 29%),
+        linear-gradient(100deg, #3b3529, #d9aa63 28%, #6b533a 44%, #1c1d21 72%, #060606);
     }
 
     .qr-camera-view::before {
       content: "";
       position: absolute;
-      inset: 13px;
-      border: 2px solid rgba(255,255,255,.82);
-      border-radius: 14px;
-      box-shadow: 0 0 0 999px rgba(16, 32, 51, .16);
+      left: 0;
+      right: 0;
+      top: 13%;
+      height: 1px;
+      background: rgba(255,255,255,.16);
     }
 
     .qr-tpe-photo {
       position: absolute;
       left: 50%;
-      top: 52%;
-      width: 168px;
-      padding: 12px 12px 14px;
-      border-radius: 10px;
-      background: linear-gradient(160deg, #26364c, #101828);
-      box-shadow: 0 16px 32px rgba(16, 32, 51, .32);
-      transform: translate(-50%, -50%) rotate(-3deg);
+      top: 39%;
+      width: 176px;
+      padding: 10px;
+      border-radius: 5px;
+      background: #f4f1e9;
+      box-shadow: 0 5px 22px rgba(0,0,0,.5);
+      transform: translate(-50%, -50%) rotate(-1.5deg);
     }
 
     .qr-tpe-screen {
       display: grid;
       place-items: center;
-      padding: 10px;
-      border-radius: 7px;
-      background: #f8fbfd;
+      padding: 0;
+      border-radius: 2px;
+      background: #fff;
     }
 
     .qr-tpe-screen img {
       display: block;
-      width: 112px;
+      width: 146px;
       aspect-ratio: 1;
       image-rendering: pixelated;
     }
 
     .qr-tpe-total {
-      margin-top: 8px;
+      position: absolute;
+      left: 50%;
+      top: calc(100% + 7px);
+      width: max-content;
       color: #fff;
-      font-size: 13px;
+      font-size: 24px;
       font-weight: 950;
       text-align: center;
+      text-shadow: 0 2px 10px rgba(0,0,0,.62);
+      transform: translateX(-50%);
     }
 
     .qr-scan-corners {
       position: absolute;
-      inset: 42px 34px;
-      border: 2px solid rgba(245, 197, 66, .95);
-      border-radius: 12px;
-      box-shadow: 0 0 18px rgba(245, 197, 66, .28);
+      left: 50%;
+      top: 39%;
+      width: 176px;
+      height: 176px;
+      border-radius: 6px;
+      transform: translate(-50%, -50%) rotate(-1.5deg);
+      pointer-events: none;
+    }
+
+    .qr-scan-corners::before,
+    .qr-scan-corners::after {
+      content: "";
+      position: absolute;
+      inset: 0;
+      background:
+        linear-gradient(#f5c542, #f5c542) left top / 24px 3px no-repeat,
+        linear-gradient(#f5c542, #f5c542) left top / 3px 24px no-repeat,
+        linear-gradient(#f5c542, #f5c542) right top / 24px 3px no-repeat,
+        linear-gradient(#f5c542, #f5c542) right top / 3px 24px no-repeat,
+        linear-gradient(#f5c542, #f5c542) left bottom / 24px 3px no-repeat,
+        linear-gradient(#f5c542, #f5c542) left bottom / 3px 24px no-repeat,
+        linear-gradient(#f5c542, #f5c542) right bottom / 24px 3px no-repeat,
+        linear-gradient(#f5c542, #f5c542) right bottom / 3px 24px no-repeat;
+    }
+
+    .qr-scan-corners::after {
+      inset: auto auto -33px 50%;
+      width: 58px;
+      height: 18px;
+      border-radius: 9px;
+      background: #f5c542;
+      transform: translateX(-50%);
     }
 
     .qr-camera-ui {
       position: absolute;
       left: 50%;
-      bottom: 18px;
-      width: 48px;
-      height: 48px;
-      border: 4px solid rgba(255,255,255,.88);
+      bottom: 20px;
+      width: 44px;
+      height: 44px;
+      border: 3px solid rgba(255,255,255,.92);
       border-radius: 50%;
-      background: rgba(255,255,255,.22);
+      background: rgba(255,255,255,.12);
+      transform: translateX(-50%);
+    }
+
+    .qr-camera-topbar {
+      position: absolute;
+      left: 0;
+      right: 0;
+      top: 0;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      height: 54px;
+      padding: 0 14px;
+      color: rgba(255,255,255,.82);
+      font-size: 12px;
+      font-weight: 900;
+    }
+
+    .qr-camera-tabs {
+      position: absolute;
+      left: 0;
+      right: 0;
+      bottom: 76px;
+      display: flex;
+      justify-content: center;
+      gap: 15px;
+      color: rgba(255,255,255,.62);
+      font-size: 7px;
+      font-weight: 900;
+      text-transform: uppercase;
+    }
+
+    .qr-camera-tabs span.active {
+      color: #f5c542;
+    }
+
+    .qr-code-chip {
+      position: absolute;
+      left: 50%;
+      top: calc(39% + 103px);
+      padding: 3px 8px;
+      border-radius: 999px;
+      background: #f5c542;
+      color: #101828;
+      font-size: 7px;
+      font-weight: 950;
       transform: translateX(-50%);
     }
 
@@ -833,8 +910,9 @@
         if (side === "client") {
           return `
             <div class="qr-camera-shot" aria-label="Vue caméra du client scannant le QR code du TPE">
-              <div class="qr-camera-phone">
+              <div class="qr-camera-frame">
                 <div class="qr-camera-view">
+                  <div class="qr-camera-topbar" aria-hidden="true"><span>↯</span><span>⌃</span><span>◎</span></div>
                   <div class="qr-tpe-photo">
                     <div class="qr-tpe-screen">
                       <img src="${qrUrl}" alt="QR code e-EUR affiché sur le TPE" loading="eager">
@@ -842,6 +920,8 @@
                     <div class="qr-tpe-total">${money(sale.amount)}</div>
                   </div>
                   <div class="qr-scan-corners" aria-hidden="true"></div>
+                  <div class="qr-code-chip" aria-hidden="true">qr.e-eur</div>
+                  <div class="qr-camera-tabs" aria-hidden="true"><span>Vidéo</span><span class="active">Photo</span><span>Portrait</span></div>
                   <div class="qr-camera-ui" aria-hidden="true"></div>
                 </div>
               </div>
