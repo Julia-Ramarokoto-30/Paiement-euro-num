@@ -972,10 +972,7 @@
         }
         return `
           <div class="qr-box">
-            ${brandLogo()}
-            <div class="qr-amount">${money(sale.amount)}</div>
             <a href="${paymentLink}" target="_blank" rel="noreferrer"><img src="${qrUrl}" alt="QR code wallet e-EUR" loading="eager"></a>
-            <div class="qr-caption">${sale.merchant}</div>
           </div>
         `;
       }
