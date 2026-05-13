@@ -238,6 +238,12 @@
       transform: translateY(-50%);
     }
 
+    .click-arrow.wallet-arrow {
+      left: -34px;
+      top: 50%;
+      transform: translateY(-50%) rotate(-90deg);
+    }
+
     @keyframes blinkArrow {
       0%, 100% { opacity: .18; }
       50% { opacity: 1; }
@@ -907,8 +913,9 @@
       sessionStorage.setItem(guideStageKey, nextStage);
     }
 
-    function guideArrow(target) {
-      return mode === "qr" && guideStage === target ? `<span class="click-arrow down" aria-hidden="true">↓</span>` : "";
+    function guideArrow(target, variant = "down") {
+      const arrowClass = variant === "wallet" ? "wallet-arrow" : "down";
+      return mode === "qr" && guideStage === target ? `<span class="click-arrow ${arrowClass}" aria-hidden="true">↓</span>` : "";
     }
 
     function scanGuideBubble() {
@@ -975,7 +982,7 @@
           <div class="label">Wallet euro numérique</div>
           <div class="amount">${money(balance)}</div>
           <div>Alias client : CLT-92B7-F31D</div>
-          <a class="wallet-action ${guideStage === "wallet" ? "click-hint" : ""}" href="recharger-wallet.html">${guideArrow("wallet")}Gérer mon wallet</a>
+          <a class="wallet-action ${guideStage === "wallet" ? "click-hint" : ""}" href="recharger-wallet.html">${guideArrow("wallet", "wallet")}Gérer mon wallet</a>
         </div>
         <div class="${statusClass(state)}">${statusContent(state.clientStatus)}</div>
         ${scanGuideBubble()}
