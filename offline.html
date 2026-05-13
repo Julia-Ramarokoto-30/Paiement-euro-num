@@ -32,6 +32,7 @@
     .click-hint { position:relative; }
     .click-arrow { position:absolute; z-index:5; color:#f5c542; font-size:28px; font-weight:950; line-height:1; text-shadow:0 2px 8px rgba(16,32,51,.25); animation:blinkArrow .82s ease-in-out infinite; pointer-events:none; }
     .click-arrow.down { left:50%; top:-32px; transform:translateX(-50%); }
+    .click-arrow.title-arrow { left:-4px; top:-34px; transform:none; }
     .click-arrow.left { right:-34px; top:50%; transform:translateY(-50%); }
     @keyframes blinkArrow { 0%,100% { opacity:.18; } 50% { opacity:1; } }
     .workspace { display:grid; grid-template-columns:1fr 1fr; gap:18px; align-items:start; }
@@ -100,7 +101,7 @@
     .primary { border:0; background:var(--brand); color:#fff; }
     .secondary { border:1px solid var(--line); background:#fff; color:var(--brand-dark); }
     @media (max-width:900px) { header,.workspace { grid-template-columns:1fr; } .support-switch { width:100%; } .support-switch button { min-width:0; } .screen { min-height:auto; } .actions { grid-template-columns:1fr; } }
-    @media (max-width:560px) { .flow-bubble { padding-left:36px; } .click-arrow.left { right:8px; top:-32px; transform:none; } }
+    @media (max-width:560px) { .flow-bubble { padding-left:36px; } .click-arrow.left { right:8px; top:-32px; transform:none; } .click-arrow.title-arrow { left:0; } }
   </style>
 </head>
 <body>
@@ -238,21 +239,20 @@
 
     function renderGuide() {
       demoGuide.innerHTML = `
-        <div class="articles-zone">
-          <div class="guide-title"><strong>Articles</strong><span>Visible au-dessus des interfaces</span></div>
-          ${productPicker()}
-        </div>
         <div class="step-zone">
-          <div class="guide-title"><strong>Étape en cours</strong><span>Une seule bulle visible</span></div>
+          <div class="guide-title"><strong>Étape en cours</strong></div>
           <div class="flow-bubbles">${guideBubbles()}</div>
+        </div>
+        <div class="articles-zone">
+          <div class="guide-title click-hint"><strong>Articles</strong>${step === 0 && !paymentRefused ? `<span class="click-arrow title-arrow" aria-hidden="true">↓</span>` : ""}</div>
+          ${productPicker()}
         </div>
       `;
     }
 
     function productPicker() {
       const options = sales.map((sale, index) => `
-        <button class="${index === saleIndex ? "active" : ""}${index === saleIndex && step === 0 && !paymentRefused ? " click-hint" : ""}" type="button" data-sale-index="${index}">
-          ${index === saleIndex && step === 0 && !paymentRefused ? `<span class="click-arrow down" aria-hidden="true">↓</span>` : ""}
+        <button class="${index === saleIndex ? "active" : ""}" type="button" data-sale-index="${index}">
           ${sale.article}
           <span>${money(sale.amount)}</span>
         </button>
@@ -282,7 +282,6 @@
       const state = current();
       const s = currentSupport();
       const sale = currentSale();
-      const nextButtonLabel = state.refused || state.accepted ? "Nouvelle vente" : "Continuer";
       const transferMessage = lastOfflineTransfer.count > 0
         ? `${lastOfflineTransfer.count} transaction${lastOfflineTransfer.count > 1 ? "s" : ""} correctement transférée${lastOfflineTransfer.count > 1 ? "s" : ""} - ${money(lastOfflineTransfer.amount)}`
         : "Aucun transfert effectué";
@@ -309,7 +308,6 @@
         <div class="card"><strong>${state.merchantTitle}</strong><p>${state.merchantText}</p></div>
         ${state.accepted ? `<button class="secondary receipt-action" type="button" data-action="generate-receipt">${receiptVisible ? "Masquer le ticket de caisse" : "Imprimer ticket de caisse"}</button>` : ""}
         ${receipt}
-        <div class="actions"><button class="secondary" type="button" data-action="back">Retour</button><button class="primary click-hint" type="button" data-action="next"><span class="click-arrow down" aria-hidden="true">↓</span>${nextButtonLabel}</button></div>
       `;
     }
 
