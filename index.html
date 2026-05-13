@@ -784,8 +784,8 @@
           merchantStatus: "",
           clientTitle: "",
           clientText: "",
-          merchantTitle: "Demande de paiement",
-          merchantText: "Le QR est prêt pour le client.",
+          merchantTitle: "",
+          merchantText: "",
           showQrClient: true,
           showQrMerchant: true,
           rail: "e-EUR / QR / AXIS"
@@ -1042,10 +1042,10 @@
         ${state.merchantStatus ? `<div class="${statusClass(state)}">${statusContent(state.merchantStatus)}</div>` : ""}
         ${paymentVisual(state, "merchant")}
         ${settlementVisual()}
-        <div class="card">
+        ${state.merchantTitle || state.merchantText ? `<div class="card">
           <strong>${state.merchantTitle}</strong>
           <p>${state.merchantText}</p>
-        </div>
+        </div>` : ""}
         ${state.accepted ? `
           <button class="secondary receipt-action ${showReceiptArrow ? "click-hint" : ""}" type="button" data-action="generate-receipt">${showReceiptArrow ? guideArrow("receipt") : ""}${receiptVisible ? "Masquer le ticket de caisse" : "Imprimer ticket de caisse"}</button>
         ` : ""}
