@@ -244,6 +244,12 @@
       transform: translateY(-50%) rotate(90deg);
     }
 
+    .click-arrow.bubble-arrow {
+      left: -34px;
+      top: 50%;
+      transform: translateY(-50%) rotate(-90deg);
+    }
+
     @keyframes blinkArrow {
       0%, 100% { opacity: .18; }
       50% { opacity: 1; }
@@ -914,14 +920,16 @@
     }
 
     function guideArrow(target, variant = "down") {
-      const arrowClass = variant === "wallet" ? "wallet-arrow" : "down";
+      const arrowClass = variant === "wallet" ? "wallet-arrow" : variant === "bubble" ? "bubble-arrow" : "down";
       return mode === "qr" && guideStage === target ? `<span class="click-arrow ${arrowClass}" aria-hidden="true">↓</span>` : "";
     }
 
     function scanGuideBubble() {
-      if (mode !== "qr" || step !== 0 || guideStage !== "scan") return "";
+      if (mode !== "qr" || step !== 0 || !["wallet", "scan"].includes(guideStage)) return "";
+      const bubbleArrow = guideStage === "wallet" ? guideArrow("wallet", "bubble") : guideArrow("scan", "bubble");
       return `
-        <div class="flow-bubble">
+        <div class="flow-bubble click-hint">
+          ${bubbleArrow}
           Après avoir fait ses courses, le client scanne le QR code généré par le TPE.
         </div>
       `;
@@ -1039,7 +1047,7 @@
         ${receipt}
         <div class="actions">
           <button class="secondary" type="button" data-action="back">Retour</button>
-          <button class="primary" type="button" data-action="next">${nextButtonLabel}</button>
+          ${state.accepted || state.refused ? "" : `<button class="primary" type="button" data-action="next">${nextButtonLabel}</button>`}
         </div>
       `;
     }
