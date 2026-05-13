@@ -34,10 +34,6 @@
     .click-arrow.down { left:50%; top:-32px; transform:translateX(-50%); }
     .click-arrow.title-arrow { left:-48px; top:50%; color:#f5c542; font-size:42px; transform:translateY(-50%) rotate(-90deg); transform-origin:center; }
     .click-arrow.left { right:-34px; top:50%; transform:translateY(-50%); }
-    .hint-bubble { position:absolute; z-index:6; width:max-content; max-width:210px; padding:8px 10px; border:1px solid #f1d49b; border-radius:8px; background:#fff8ea; color:#7a4300; font-size:12px; font-weight:900; line-height:1.25; box-shadow:0 8px 20px rgba(13,35,58,.12); pointer-events:none; }
-    .guide-title .hint-bubble { color:#7a4300; font-weight:900; }
-    .hint-bubble.article-hint { left:8px; top:-38px; }
-    .hint-bubble.continue-hint { left:50%; top:-72px; transform:translateX(-50%); }
     @keyframes blinkArrow { 0%,100% { opacity:.18; } 50% { opacity:1; } }
     .workspace { display:grid; grid-template-columns:1fr 1fr; gap:18px; align-items:start; }
     .device { overflow:hidden; border:1px solid rgba(255,255,255,.28); border-radius:8px; background:var(--panel); box-shadow:var(--shadow); }
@@ -105,7 +101,7 @@
     .primary { border:0; background:var(--brand); color:#fff; }
     .secondary { border:1px solid var(--line); background:#fff; color:var(--brand-dark); }
     @media (max-width:900px) { header,.workspace { grid-template-columns:1fr; } .support-switch { width:100%; } .support-switch button { min-width:0; } .screen { min-height:auto; } .actions { grid-template-columns:1fr; } }
-    @media (max-width:560px) { .flow-bubble { padding-left:36px; } .click-arrow.left { right:8px; top:-32px; transform:none; } .click-arrow.title-arrow { left:-30px; font-size:36px; } .hint-bubble.article-hint { left:14px; top:-42px; } }
+    @media (max-width:560px) { .flow-bubble { padding-left:36px; } .click-arrow.left { right:8px; top:-32px; transform:none; } .click-arrow.title-arrow { left:-30px; font-size:36px; } }
   </style>
 </head>
 <body>
@@ -244,7 +240,7 @@
     function renderGuide() {
       demoGuide.innerHTML = `
         <div class="articles-zone">
-          <div class="guide-title click-hint"><strong>Articles</strong>${step === 0 && !paymentRefused ? `<span class="click-arrow title-arrow" aria-hidden="true">↓</span><span class="hint-bubble article-hint">Le client choisit son article.</span>` : ""}</div>
+          <div class="guide-title click-hint"><strong>Articles</strong>${step === 0 && !paymentRefused ? `<span class="click-arrow title-arrow" aria-hidden="true">↓</span>` : ""}</div>
           ${productPicker()}
         </div>
       `;
@@ -268,13 +264,14 @@
       const title = state.title || s.title;
       const text = state.accepted ? `Montant réglé : ${money(sale.amount)}` : state.text || (step === 0 ? s.intro : s.progress);
       const nextButtonLabel = state.refused || state.accepted ? "Nouvelle vente" : "Continuer";
+      const showNextArrow = !state.accepted || receiptVisible;
       clientScreen.innerHTML = `
         <div class="wallet-card"><div class="label">Solde puce e-euro offline</div><div class="amount">${money(balance)}</div><div>Support : ${s.label}</div></div>
         <div class="${statusClass(state)}">${statusContent(state.clientStatus)}</div>
         ${state.visual ? offlineVisual() : ""}
         ${offlineSettlementVisual()}
         <div class="card"><strong>${state.accepted ? s.ticket : title}</strong><p>${text}</p></div>
-        <div class="actions"><button class="secondary" type="button" data-action="back">Retour</button><button class="primary click-hint" type="button" data-action="next"><span class="hint-bubble continue-hint">Cliquer sur Continuer.</span><span class="click-arrow down" aria-hidden="true">↓</span>${nextButtonLabel}</button></div>
+        <div class="actions"><button class="secondary" type="button" data-action="back">Retour</button><button class="primary ${showNextArrow ? "click-hint" : ""}" type="button" data-action="next">${showNextArrow ? `<span class="click-arrow down" aria-hidden="true">↓</span>` : ""}${nextButtonLabel}</button></div>
       `;
     }
 
@@ -306,7 +303,7 @@
         ${state.visual ? offlineVisual() : ""}
         ${offlineSettlementVisual()}
         <div class="card"><strong>${state.merchantTitle}</strong><p>${state.merchantText}</p></div>
-        ${state.accepted ? `<button class="secondary receipt-action" type="button" data-action="generate-receipt">${receiptVisible ? "Masquer le ticket de caisse" : "Imprimer ticket de caisse"}</button>` : ""}
+        ${state.accepted ? `<button class="secondary receipt-action ${receiptVisible ? "" : "click-hint"}" type="button" data-action="generate-receipt">${receiptVisible ? "" : `<span class="click-arrow down" aria-hidden="true">↓</span>`}${receiptVisible ? "Masquer le ticket de caisse" : "Imprimer ticket de caisse"}</button>` : ""}
         ${receipt}
       `;
     }
