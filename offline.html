@@ -238,9 +238,10 @@
     }
 
     function renderGuide() {
+      const showArticleArrow = step === 0 && !paymentRefused || receiptVisible;
       demoGuide.innerHTML = `
         <div class="articles-zone">
-          <div class="guide-title click-hint"><strong>Articles</strong>${step === 0 && !paymentRefused ? `<span class="click-arrow title-arrow" aria-hidden="true">↓</span>` : ""}</div>
+          <div class="guide-title click-hint"><strong>Articles</strong>${showArticleArrow ? `<span class="click-arrow title-arrow" aria-hidden="true">↓</span>` : ""}</div>
           ${productPicker()}
         </div>
       `;
@@ -264,14 +265,13 @@
       const title = state.title || s.title;
       const text = state.accepted ? `Montant réglé : ${money(sale.amount)}` : state.text || (step === 0 ? s.intro : s.progress);
       const nextButtonLabel = state.refused || state.accepted ? "Nouvelle vente" : "Continuer";
-      const showNextArrow = !state.accepted || receiptVisible;
       clientScreen.innerHTML = `
         <div class="wallet-card"><div class="label">Solde puce e-euro offline</div><div class="amount">${money(balance)}</div><div>Support : ${s.label}</div></div>
         <div class="${statusClass(state)}">${statusContent(state.clientStatus)}</div>
         ${state.visual ? offlineVisual() : ""}
         ${offlineSettlementVisual()}
         <div class="card"><strong>${state.accepted ? s.ticket : title}</strong><p>${text}</p></div>
-        <div class="actions"><button class="secondary" type="button" data-action="back">Retour</button><button class="primary ${showNextArrow ? "click-hint" : ""}" type="button" data-action="next">${showNextArrow ? `<span class="click-arrow down" aria-hidden="true">↓</span>` : ""}${nextButtonLabel}</button></div>
+        ${state.accepted ? "" : `<div class="actions"><button class="secondary" type="button" data-action="back">Retour</button><button class="primary click-hint" type="button" data-action="next"><span class="click-arrow down" aria-hidden="true">↓</span>${nextButtonLabel}</button></div>`}
       `;
     }
 
