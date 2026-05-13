@@ -20,17 +20,20 @@
     .support-switch { display:inline-grid; grid-template-columns:1fr 1fr; gap:6px; margin-top:12px; padding:6px; border:1px solid rgba(255,255,255,.36); border-radius:8px; background:rgba(255,255,255,.14); }
     .support-switch button { min-height:38px; min-width:132px; padding:8px 12px; border:0; border-radius:7px; background:transparent; color:rgba(255,255,255,.82); cursor:pointer; font-weight:900; }
     .support-switch button.active { background:#fff; color:var(--brand-dark); }
-    .demo-guide { display:grid; gap:12px; margin:0 0 18px; padding:14px; border:1px solid rgba(255,255,255,.32); border-radius:8px; background:rgba(255,255,255,.92); box-shadow:var(--shadow); }
-    .guide-top { display:grid; grid-template-columns:minmax(260px,.85fr) 1.15fr; gap:14px; align-items:start; }
+    .demo-guide { display:grid; gap:12px; margin:0 0 18px; }
+    .articles-zone,.step-zone { padding:14px; border:1px solid rgba(255,255,255,.32); border-radius:8px; background:rgba(255,255,255,.92); box-shadow:var(--shadow); }
     .guide-title { display:flex; align-items:center; justify-content:space-between; gap:12px; margin-bottom:8px; }
     .guide-title strong { color:var(--brand-dark); font-size:15px; }
     .guide-title span { color:var(--muted); font-size:12px; font-weight:800; }
-    .flow-bubbles { display:grid; grid-template-columns:repeat(4,1fr); gap:8px; }
-    .flow-bubble { position:relative; min-height:86px; padding:10px 10px 10px 12px; border:1px solid var(--line); border-radius:8px; background:#fff; color:#455468; font-size:12px; line-height:1.32; box-shadow:0 8px 22px rgba(13,35,58,.07); opacity:.72; }
-    .flow-bubble::before { content:""; position:absolute; left:13px; top:-5px; width:10px; height:10px; border-left:1px solid var(--line); border-top:1px solid var(--line); background:#fff; transform:rotate(45deg); }
-    .flow-bubble strong { display:block; margin-bottom:5px; color:var(--ink); font-size:12px; }
-    .flow-bubble.active { border-color:#89d6d7; background:#f2fbfb; color:#1f5560; opacity:1; }
-    .flow-bubble.active::before { border-color:#89d6d7; background:#f2fbfb; }
+    .flow-bubbles { display:block; }
+    .flow-bubble { position:relative; min-height:72px; padding:13px 14px 13px 44px; border:1px solid #89d6d7; border-radius:8px; background:#f2fbfb; color:#1f5560; font-size:14px; line-height:1.42; box-shadow:0 8px 22px rgba(13,35,58,.07); }
+    .flow-bubble::before { content:""; position:absolute; left:18px; top:21px; width:12px; height:12px; border-radius:50%; background:var(--brand); box-shadow:0 0 0 6px rgba(0,119,129,.14); }
+    .flow-bubble strong { display:block; margin-bottom:5px; color:var(--ink); font-size:14px; }
+    .click-hint { position:relative; }
+    .click-arrow { position:absolute; z-index:5; color:#f5c542; font-size:28px; font-weight:950; line-height:1; text-shadow:0 2px 8px rgba(16,32,51,.25); animation:blinkArrow .82s ease-in-out infinite; pointer-events:none; }
+    .click-arrow.down { left:50%; top:-32px; transform:translateX(-50%); }
+    .click-arrow.left { right:-34px; top:50%; transform:translateY(-50%); }
+    @keyframes blinkArrow { 0%,100% { opacity:.18; } 50% { opacity:1; } }
     .workspace { display:grid; grid-template-columns:1fr 1fr; gap:18px; align-items:start; }
     .device { overflow:hidden; border:1px solid rgba(255,255,255,.28); border-radius:8px; background:var(--panel); box-shadow:var(--shadow); }
     .device-top { display:flex; justify-content:space-between; gap:10px; padding:13px 16px; border-bottom:1px solid var(--line); color:var(--muted); font-size:12px; font-weight:900; text-transform:uppercase; }
@@ -72,6 +75,7 @@
     .product-picker button { display:grid; grid-template-columns:1fr auto; gap:10px; align-items:center; min-height:42px; padding:9px 10px; border:1px solid var(--line); border-radius:8px; background:#fff; color:var(--ink); cursor:pointer; font-weight:900; text-align:left; }
     .product-picker button.active { border-color:var(--brand); background:#e8f7f1; color:var(--brand-dark); }
     .product-picker span { color:var(--muted); font-weight:900; white-space:nowrap; }
+    .product-picker .click-arrow { color:#f5c542; }
     .sale-summary { display:grid; grid-template-columns:1fr auto; gap:10px; align-items:center; min-height:58px; padding:12px; border:1px solid var(--line); border-radius:8px; background:#f8fbfd; }
     .sale-summary strong { display:block; color:var(--ink); font-size:14px; }
     .sale-summary span { color:var(--brand-dark); font-size:18px; font-weight:950; white-space:nowrap; }
@@ -95,8 +99,8 @@
     .primary,.secondary { min-height:46px; border-radius:8px; cursor:pointer; font-weight:900; }
     .primary { border:0; background:var(--brand); color:#fff; }
     .secondary { border:1px solid var(--line); background:#fff; color:var(--brand-dark); }
-    @media (max-width:900px) { header,.guide-top,.workspace { grid-template-columns:1fr; } .flow-bubbles { grid-template-columns:1fr 1fr; } .support-switch { width:100%; } .support-switch button { min-width:0; } .screen { min-height:auto; } .actions { grid-template-columns:1fr; } }
-    @media (max-width:560px) { .flow-bubbles { grid-template-columns:1fr; } }
+    @media (max-width:900px) { header,.workspace { grid-template-columns:1fr; } .support-switch { width:100%; } .support-switch button { min-width:0; } .screen { min-height:auto; } .actions { grid-template-columns:1fr; } }
+    @media (max-width:560px) { .flow-bubble { padding-left:36px; } .click-arrow.left { right:8px; top:-32px; transform:none; } }
   </style>
 </head>
 <body>
@@ -105,7 +109,7 @@
       <div>
         <div class="project-kicker">Projet PIE 2026 - EM Grenoble</div>
         <h1>Paiement hors ligne</h1>
-        <p class="lede">Simulation e-EUR sans QR code : le client présente un téléphone NFC ou une smart card au TPE, puis la vente est synchronisée plus tard.</p>
+        <p class="lede">Simulation e-EUR hors ligne : le client présente un téléphone NFC ou une smart card au TPE, puis la vente est synchronisée plus tard.</p>
         <div class="support-switch" aria-label="Support de paiement hors ligne">
           <button class="active" type="button" data-support="phone">Téléphone NFC</button>
           <button type="button" data-support="card">Smart card</button>
@@ -219,40 +223,36 @@
       const bubbles = [
         { title:"Étape 1", text:`Le client choisit son article. La démo retient ${sale.article} pour ${money(sale.amount)}.` },
         { title:"Étape 2", text:"Le commerçant saisit ou confirme le montant sur le TPE offline." },
-        { title:"Étape 3", text:`Le client présente son ${s.short}. Variante connectée : QR code à présenter ou à scanner.` },
+        { title:"Étape 3", text:`Le client présente son ${s.short} au TPE. Le paiement hors ligne se fait par téléphone NFC ou smart card.` },
         { title: paymentRefused ? "Blocage" : "Étape 4", text: paymentRefused ? "Le solde est insuffisant : le paiement est refusé localement." : "Le TPE valide hors ligne, puis garde la vente en file de synchronisation." }
       ];
       const activeIndex = activeGuideIndex();
-      return bubbles.map((bubble, index) => `
-        <div class="flow-bubble ${index === activeIndex ? "active" : ""}">
+      const bubble = bubbles[activeIndex];
+      return `
+        <div class="flow-bubble">
           <strong>${bubble.title}</strong>
           ${bubble.text}
         </div>
-      `).join("");
+      `;
     }
 
     function renderGuide() {
       demoGuide.innerHTML = `
-        <div class="guide-top">
-          <div>
-            <div class="guide-title"><strong>Préparation de la vente</strong><span>Visible hors écrans client / TPE</span></div>
-            ${productPicker()}
-          </div>
-          <div>
-            <div class="guide-title"><strong>Parcours guidé</strong><span>Repères discrets</span></div>
-            <div class="flow-bubbles">${guideBubbles()}</div>
-          </div>
+        <div class="articles-zone">
+          <div class="guide-title"><strong>Articles</strong><span>Visible au-dessus des interfaces</span></div>
+          ${productPicker()}
+        </div>
+        <div class="step-zone">
+          <div class="guide-title"><strong>Étape en cours</strong><span>Une seule bulle visible</span></div>
+          <div class="flow-bubbles">${guideBubbles()}</div>
         </div>
       `;
     }
 
     function productPicker() {
-      if (step !== 0 || paymentRefused) {
-        const sale = currentSale();
-        return `<div class="sale-summary" aria-label="Achat sélectionné"><div><strong>${sale.article}</strong><em>Achat sélectionné pour la démonstration</em></div><span>${money(sale.amount)}</span></div>`;
-      }
       const options = sales.map((sale, index) => `
-        <button class="${index === saleIndex ? "active" : ""}" type="button" data-sale-index="${index}">
+        <button class="${index === saleIndex ? "active" : ""}${index === saleIndex && step === 0 && !paymentRefused ? " click-hint" : ""}" type="button" data-sale-index="${index}">
+          ${index === saleIndex && step === 0 && !paymentRefused ? `<span class="click-arrow down" aria-hidden="true">↓</span>` : ""}
           ${sale.article}
           <span>${money(sale.amount)}</span>
         </button>
@@ -274,7 +274,7 @@
         ${state.visual ? offlineVisual() : ""}
         ${offlineSettlementVisual()}
         <div class="card"><strong>${state.accepted ? s.ticket : title}</strong><p>${text}</p></div>
-        <div class="actions"><button class="secondary" type="button" data-action="back">Retour</button><button class="primary" type="button" data-action="next">${nextButtonLabel}</button></div>
+        <div class="actions"><button class="secondary" type="button" data-action="back">Retour</button><button class="primary click-hint" type="button" data-action="next"><span class="click-arrow down" aria-hidden="true">↓</span>${nextButtonLabel}</button></div>
       `;
     }
 
@@ -309,7 +309,7 @@
         <div class="card"><strong>${state.merchantTitle}</strong><p>${state.merchantText}</p></div>
         ${state.accepted ? `<button class="secondary receipt-action" type="button" data-action="generate-receipt">${receiptVisible ? "Masquer le ticket de caisse" : "Imprimer ticket de caisse"}</button>` : ""}
         ${receipt}
-        <div class="actions"><button class="secondary" type="button" data-action="back">Retour</button><button class="primary" type="button" data-action="next">${nextButtonLabel}</button></div>
+        <div class="actions"><button class="secondary" type="button" data-action="back">Retour</button><button class="primary click-hint" type="button" data-action="next"><span class="click-arrow down" aria-hidden="true">↓</span>${nextButtonLabel}</button></div>
       `;
     }
 
