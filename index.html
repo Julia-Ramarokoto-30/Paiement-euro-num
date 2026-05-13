@@ -767,7 +767,7 @@
       alias: sale.alias
     });
     const paymentLink = `${appOrigin}/wallet-demo.html?${saleParams.toString()}`;
-    const qrUrl = `https://api.qrserver.com/v1/create-qr-code/?size=300x300&margin=12&data=${encodeURIComponent(paymentLink)}`;
+    const qrUrl = `https://api.qrserver.com/v1/create-qr-code/?size=420x420&margin=24&data=${encodeURIComponent(paymentLink)}`;
     const statusUrl = `${appOrigin}/status`;
     const resetUrl = `${appOrigin}/reset`;
     const guideStageKey = "eeurIndexGuideStage";
@@ -972,7 +972,7 @@
         }
         return `
           <div class="qr-box">
-            <a href="${paymentLink}" target="_blank" rel="noreferrer"><img src="${qrUrl}" alt="QR code wallet e-EUR" loading="eager"></a>
+            <img src="${qrUrl}" alt="QR code e-EUR affiché sur le TPE" loading="eager">
           </div>
         `;
       }
