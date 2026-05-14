@@ -34,14 +34,17 @@
     main {
       width: min(940px, 100%);
       overflow: hidden;
-      border-radius: 14px;
-      background: #fff;
+      border: 1px solid rgba(255,255,255,.32);
+      border-radius: 8px;
+      background: rgba(255,255,255,.16);
+      backdrop-filter: blur(14px);
       box-shadow: 0 24px 70px rgba(10, 30, 50, .25);
     }
 
     header {
       padding: 18px;
-      background: #102033;
+      border-bottom: 1px solid rgba(255,255,255,.28);
+      background: transparent;
       color: #fff;
     }
 
@@ -79,12 +82,13 @@
 
     .balance-card {
       padding: 16px;
+      border: 1px solid rgba(255,255,255,.28);
       border-radius: 8px;
-      background: #102033;
+      background: rgba(16,32,51,.72);
       color: #fff;
     }
 
-    .offline-card { background: #173f8a; }
+    .offline-card { background: rgba(23,63,138,.64); }
 
     .balance-card .label { color: rgba(255,255,255,.64); }
 
@@ -133,17 +137,17 @@
 
     .helper {
       margin: 0;
-      color: #455468;
+      color: rgba(255,255,255,.84);
       line-height: 1.45;
     }
 
     .transfer-note {
       margin: 0 0 16px;
       padding: 13px 14px;
-      border: 1px solid #cfe0ff;
+      border: 1px solid rgba(255,255,255,.32);
       border-radius: 8px;
-      background: #edf4ff;
-      color: #173f8a;
+      background: rgba(255,255,255,.12);
+      color: #fff;
       font-weight: 850;
       line-height: 1.42;
     }
@@ -170,7 +174,7 @@
     label {
       display: grid;
       gap: 7px;
-      color: #344054;
+      color: #fff;
       font-weight: 900;
     }
 
@@ -178,8 +182,9 @@
       width: 100%;
       min-height: 52px;
       padding: 10px 12px;
-      border: 1px solid var(--line);
+      border: 1px solid rgba(255,255,255,.44);
       border-radius: 8px;
+      background: rgba(255,255,255,.78);
       color: var(--ink);
       font: inherit;
       font-size: 22px;
@@ -196,10 +201,10 @@
       justify-content: space-between;
       gap: 12px;
       padding: 12px;
-      border: 1px solid #cfe0ff;
+      border: 1px solid rgba(255,255,255,.32);
       border-radius: 8px;
-      background: #edf4ff;
-      color: #173f8a;
+      background: rgba(237,248,249,.46);
+      color: #fff;
       font-weight: 900;
     }
 
@@ -253,15 +258,15 @@
     }
 
     .secondary {
-      border: 1px solid var(--line);
-      background: #fff;
-      color: var(--brand-dark);
+      border: 1px solid rgba(255,255,255,.68);
+      background: rgba(255,255,255,.16);
+      color: #fff;
     }
 
     .back-button {
       min-width: 132px;
-      border-color: var(--brand);
-      box-shadow: 0 6px 16px rgba(0, 119, 129, .14);
+      border-color: rgba(255,255,255,.68);
+      box-shadow: 0 6px 16px rgba(16, 32, 51, .14);
     }
 
     @media (max-width: 760px) {
