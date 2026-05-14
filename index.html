@@ -548,6 +548,25 @@
       image-rendering: pixelated;
     }
 
+    .qr-code-wrap {
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      gap: 14px;
+      width: 100%;
+    }
+
+    .qr-code-arrow {
+      flex: 0 0 auto;
+      color: #f5c542;
+      font-size: 52px;
+      font-weight: 950;
+      line-height: 1;
+      text-shadow: 0 2px 8px rgba(16,32,51,.25);
+      animation: blinkArrow .82s ease-in-out infinite;
+      pointer-events: none;
+    }
+
     .qr-caption {
       margin-top: 9px;
       color: var(--muted);
@@ -747,6 +766,8 @@
       .basket-heading { align-items: flex-start; flex-direction: column; }
       .basket-items { grid-template-columns: 1fr; }
       .basket-item span:first-child { white-space: normal; }
+      .qr-code-wrap { gap: 8px; }
+      .qr-code-arrow { font-size: 34px; }
     }
   </style>
 </head>
@@ -1028,7 +1049,10 @@
         }
         return `
           <div class="qr-box">
-            <img src="${qrUrl}" alt="QR code e-EUR affiché sur le TPE" loading="eager">
+            <div class="qr-code-wrap">
+              <span class="qr-code-arrow" aria-hidden="true">→</span>
+              <img src="${qrUrl}" alt="QR code e-EUR affiché sur le TPE" loading="eager">
+            </div>
             <p class="qr-origin-note">QR code généré automatiquement par la caisse après scan des articles, ou généré après saisie manuelle du montant dans le TPE par le vendeur.</p>
           </div>
         `;
