@@ -493,18 +493,16 @@
       line-height: 1;
     }
 
-    .brand-logo.auchan {
-      grid-auto-flow: column;
-      gap: 7px;
+    .brand-logo.casino {
       background: #fff;
-      color: #e31b23;
-      font-size: 20px;
-      text-transform: none;
+      padding: 5px 10px;
     }
 
-    .auchan-bird {
-      width: 34px;
-      height: 26px;
+    .casino-logo {
+      display: block;
+      width: 150px;
+      max-width: 100%;
+      height: auto;
     }
 
     .brand-logo.transavia {
@@ -621,9 +619,8 @@
       margin-bottom: 0;
     }
 
-    .receipt-header .brand-logo.auchan span {
-      color: #e31b23;
-      text-transform: none;
+    .receipt-header .casino-logo {
+      width: 132px;
     }
 
     .receipt-header strong {
@@ -762,9 +759,9 @@
 
   <script>
     const sale = {
-      merchant: "Auchan",
+      merchant: "Casino",
       amount: 14.43,
-      label: "Achat Auchan",
+      label: "Achat Casino",
       items: [
         { name: "Pancakes", price: 2.35 },
         { name: "Jus d'orange", price: 2.10 },
@@ -774,7 +771,7 @@
         { name: "Kiwi", price: 0.69 },
         { name: "Menthe thé vert", price: 2.40 }
       ],
-      brand: "auchan",
+      brand: "casino",
       reference: "EEUR-WL-240426-8F3A",
       alias: "MRC-8F3A-214C"
     };
@@ -829,7 +826,7 @@
           clientStatus: "Paiement accepté",
           merchantStatus: "Accepté - ticket disponible",
           clientTitle: "Ticket wallet",
-          clientText: "Auchan - 14,43 €",
+          clientText: "Casino - 14,43 €",
           merchantTitle: "Vente validée",
           merchantText: "Le paiement e-EUR est confirmé.",
           showQrClient: false,
@@ -865,7 +862,7 @@
           clientStatus: "Paiement accepté",
           merchantStatus: "Accepté - ticket disponible",
           clientTitle: "Ticket wallet",
-          clientText: "Auchan - 14,43 €",
+          clientText: "Casino - 14,43 €",
           merchantTitle: "Vente validée",
           merchantText: "Le paiement e-EUR est confirmé.",
           showNfcClient: false,
@@ -972,7 +969,7 @@
     }
 
     function brandLogo(brand = sale.brand) {
-      if (brand === "auchan") return `<div class="brand-logo auchan" aria-label="Logo Auchan"><svg class="auchan-bird" viewBox="0 0 64 44" aria-hidden="true" focusable="false"><path fill="#e31b23" d="M3 26c13 1 21-5 28-17 4 9 12 14 27 13-11 7-19 9-30 7-8 6-16 7-25 5 6-2 11-4 15-8-5 1-10 1-15 0Z"/><path fill="#e31b23" d="M18 13 31 2l7 16-15 5z"/><path fill="#00a86b" d="M7 34c11 1 20-1 27-7-2 10-9 15-20 14l4-5c-4 1-8 0-11-2Z"/><path fill="#00a86b" d="M25 30 39 42h-8L20 32z"/><circle cx="42" cy="15" r="3" fill="#fff"/><circle cx="43" cy="15" r="1.3" fill="#102033"/><path fill="#00a86b" d="m50 14 11-4-9 8z"/></svg><span>Auchan</span></div>`;
+      if (brand === "casino") return `<div class="brand-logo casino" aria-label="Logo Casino"><img class="casino-logo" src="casino.png" alt="Casino" loading="eager"></div>`;
       if (brand === "transavia") return `<div class="brand-logo transavia" aria-label="Logo Transavia">transavia</div>`;
       return "";
     }
@@ -1041,7 +1038,7 @@
         .map(item => `<div class="ticket-row"><span>${item.name}</span><strong>${money(item.price)}</strong></div>`)
         .join("");
       const receipt = receiptVisible ? `
-        <div class="ticket" aria-label="Ticket de caisse Auchan">
+        <div class="ticket" aria-label="Ticket de caisse Casino">
           <div class="receipt-header">
             ${brandLogo()}
             <strong>Ticket de caisse</strong>
