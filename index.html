@@ -339,6 +339,12 @@
       transform: translateY(-50%) rotate(-90deg);
     }
 
+    .click-arrow.receipt-arrow {
+      left: 50%;
+      top: calc(100% + 8px);
+      transform: translateX(-50%) rotate(180deg);
+    }
+
     .click-arrow.wallet-arrow {
       right: -34px;
       top: 50%;
@@ -961,7 +967,7 @@
     }
 
     function guideArrow(target, variant = "down") {
-      const arrowClass = variant === "wallet" ? "wallet-arrow" : variant === "bubble" ? "bubble-arrow" : variant === "action" ? "action-arrow" : "down";
+      const arrowClass = variant === "wallet" ? "wallet-arrow" : variant === "bubble" ? "bubble-arrow" : variant === "action" ? "action-arrow" : variant === "receipt" ? "receipt-arrow" : "down";
       return (mode === "qr" || mode === "nfc") && guideStage === target ? `<span class="click-arrow ${arrowClass}" aria-hidden="true">↓</span>` : "";
     }
 
@@ -1079,7 +1085,7 @@
           <p>${state.merchantText}</p>
         </div>` : ""}
         ${state.accepted && !receiptVisible ? `
-          <button class="secondary receipt-action ${showReceiptArrow ? "click-hint" : ""}" type="button" data-action="generate-receipt">${showReceiptArrow ? guideArrow("receipt", "action") : ""}Imprimer ticket de caisse</button>
+          <button class="secondary receipt-action ${showReceiptArrow ? "click-hint" : ""}" type="button" data-action="generate-receipt">${showReceiptArrow ? guideArrow("receipt", "receipt") : ""}Imprimer ticket de caisse</button>
         ` : ""}
         ${receipt}
       `;
