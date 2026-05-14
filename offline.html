@@ -37,6 +37,7 @@
     .click-arrow { position:absolute; z-index:5; color:#f5c542; font-size:28px; font-weight:950; line-height:1; text-shadow:0 2px 8px rgba(16,32,51,.25); animation:blinkArrow .82s ease-in-out infinite; pointer-events:none; }
     .click-arrow.down { left:50%; top:-32px; transform:translateX(-50%); }
     .click-arrow.receipt-arrow { left:50%; top:calc(100% + 8px); transform:translateX(-50%) rotate(180deg); }
+    .click-arrow.action-arrow { left:-34px; top:50%; transform:translateY(-50%) rotate(-90deg); }
     .click-arrow.next-button-arrow { left:-38px; top:50%; transform:translateY(-50%); }
     .click-arrow.title-arrow { left:-48px; top:50%; color:#f5c542; font-size:42px; transform:translateY(-50%) rotate(-90deg); transform-origin:center; }
     .click-arrow.left { right:-34px; top:50%; transform:translateY(-50%); }
@@ -276,13 +277,14 @@
       const balance = getOfflineBalance();
       const title = state.title || s.title;
       const text = state.accepted ? `Montant réglé : ${money(sale.amount)}` : state.text || (step === 0 ? s.intro : s.progress);
+      const showRestartButton = state.accepted || state.refused;
       clientScreen.innerHTML = `
         <div class="wallet-card"><div class="label">Solde puce e-euro offline</div><div class="amount">${money(balance)}</div><div>Support : ${s.label}</div></div>
         <div class="${statusClass(state)}">${statusContent(state.clientStatus)}</div>
         ${state.visual ? offlineVisual() : ""}
         ${offlineSettlementVisual()}
         <div class="card"><strong>${state.accepted ? s.ticket : title}</strong><p>${text}</p></div>
-        ${state.accepted || state.refused || step === 1 ? "" : `<div class="actions"><button class="primary next-arrow-button click-hint" type="button" data-action="next" aria-label="Continuer"><span class="click-arrow next-button-arrow" aria-hidden="true">→</span><span aria-hidden="true">→</span></button></div>`}
+        ${showRestartButton ? `<div class="actions"><button class="primary next-arrow-button click-hint" type="button" data-action="next" aria-label="Nouvel achat"><span class="click-arrow action-arrow" aria-hidden="true">↓</span><span aria-hidden="true">→</span></button></div>` : step === 1 ? "" : `<div class="actions"><button class="primary next-arrow-button click-hint" type="button" data-action="next" aria-label="Continuer"><span class="click-arrow next-button-arrow" aria-hidden="true">→</span><span aria-hidden="true">→</span></button></div>`}
       `;
     }
 
