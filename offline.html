@@ -251,7 +251,7 @@
     }
 
     function renderGuide() {
-      const showArticleArrow = step === 0 && !paymentRefused || receiptVisible || paymentRefused;
+      const showArticleArrow = step === 0 && !paymentRefused;
       demoGuide.innerHTML = `
         <div class="articles-zone">
           <div class="guide-title click-hint"><strong>Articles</strong>${showArticleArrow ? `<span class="click-arrow title-arrow" aria-hidden="true">↓</span>` : ""}</div>
@@ -278,13 +278,14 @@
       const title = state.title || s.title;
       const text = state.accepted ? `Montant réglé : ${money(sale.amount)}` : state.text || (step === 0 ? s.intro : s.progress);
       const showRestartButton = state.accepted || state.refused;
+      const showRestartArrow = state.refused || (state.accepted && receiptVisible);
       clientScreen.innerHTML = `
         <div class="wallet-card"><div class="label">Solde puce e-euro offline</div><div class="amount">${money(balance)}</div><div>Support : ${s.label}</div></div>
         <div class="${statusClass(state)}">${statusContent(state.clientStatus)}</div>
         ${state.visual ? offlineVisual() : ""}
         ${offlineSettlementVisual()}
         <div class="card"><strong>${state.accepted ? s.ticket : title}</strong><p>${text}</p></div>
-        ${showRestartButton ? `<div class="actions"><button class="primary next-arrow-button click-hint" type="button" data-action="next" aria-label="Nouvel achat"><span class="click-arrow action-arrow" aria-hidden="true">↓</span><span aria-hidden="true">→</span></button></div>` : step === 1 ? "" : `<div class="actions"><button class="primary next-arrow-button click-hint" type="button" data-action="next" aria-label="Continuer"><span class="click-arrow next-button-arrow" aria-hidden="true">→</span><span aria-hidden="true">→</span></button></div>`}
+        ${showRestartButton ? `<div class="actions"><button class="primary next-arrow-button ${showRestartArrow ? "click-hint" : ""}" type="button" data-action="next" aria-label="Nouvel achat">${showRestartArrow ? `<span class="click-arrow action-arrow" aria-hidden="true">↓</span>` : ""}<span aria-hidden="true">→</span></button></div>` : step === 1 ? "" : `<div class="actions"><button class="primary next-arrow-button click-hint" type="button" data-action="next" aria-label="Continuer"><span class="click-arrow next-button-arrow" aria-hidden="true">→</span><span aria-hidden="true">→</span></button></div>`}
       `;
     }
 
