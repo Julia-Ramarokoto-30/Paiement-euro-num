@@ -32,6 +32,7 @@
     .click-hint { position:relative; }
     .click-arrow { position:absolute; z-index:5; color:#f5c542; font-size:28px; font-weight:950; line-height:1; text-shadow:0 2px 8px rgba(16,32,51,.25); animation:blinkArrow .82s ease-in-out infinite; pointer-events:none; }
     .click-arrow.down { left:50%; top:-32px; transform:translateX(-50%); }
+    .click-arrow.next-button-arrow { left:-38px; top:50%; transform:translateY(-50%); }
     .click-arrow.title-arrow { left:-48px; top:50%; color:#f5c542; font-size:42px; transform:translateY(-50%) rotate(-90deg); transform-origin:center; }
     .click-arrow.left { right:-34px; top:50%; transform:translateY(-50%); }
     @keyframes blinkArrow { 0%,100% { opacity:.18; } 50% { opacity:1; } }
@@ -271,7 +272,7 @@
         ${state.visual ? offlineVisual() : ""}
         ${offlineSettlementVisual()}
         <div class="card"><strong>${state.accepted ? s.ticket : title}</strong><p>${text}</p></div>
-        ${state.accepted || state.refused ? "" : `<div class="actions"><button class="primary next-arrow-button click-hint" type="button" data-action="next" aria-label="Continuer"><span class="click-arrow down" aria-hidden="true">↓</span><span aria-hidden="true">→</span></button></div>`}
+        ${state.accepted || state.refused ? "" : `<div class="actions"><button class="primary next-arrow-button click-hint" type="button" data-action="next" aria-label="Continuer"><span class="click-arrow next-button-arrow" aria-hidden="true">→</span><span aria-hidden="true">→</span></button></div>`}
       `;
     }
 
