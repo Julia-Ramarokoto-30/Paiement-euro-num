@@ -288,7 +288,7 @@
         <a class="secondary back-button" href="index.html?wallet=done">Retour</a>
       </div>
 
-      <p class="transfer-note">Alimenter votre wallet ou votre puce par virement bancaire depuis votre compte bancaire.</p>
+      <p class="transfer-note">Alimentez votre wallet par virement bancaire depuis votre compte bancaire, puis transférez une partie du solde vers votre puce e-euro offline.</p>
 
       <div class="recharge-grid">
         <div class="recharge-panel">
@@ -326,15 +326,15 @@
           </div>
 
           <form id="offlineTopupForm">
-            <p class="helper">Rechargez la puce e-euro utilisée pour les paiements offline NFC ou smart card.</p>
+            <p class="helper">Transférez une partie du solde du wallet vers la puce e-euro utilisée pour les paiements offline NFC ou smart card.</p>
             <label>
-              Montant de recharge offline
+              Montant à transférer vers la puce
               <input id="offlineTopupAmount" name="offlineAmount" type="number" min="1" step="0.01" value="25" inputmode="decimal" required>
             </label>
             <div class="limit"><span>Plafond puce offline</span><strong>300 €</strong></div>
             <p class="helper">(plafond non encore défini par la BCE)</p>
             <div class="status" id="offlineStatus" role="status" aria-live="polite"></div>
-            <button id="offlineSubmitButton" type="submit">Recharger la puce e-euro</button>
+            <button id="offlineSubmitButton" type="submit">Transférer vers la puce</button>
           </form>
         </div>
       </div>
@@ -383,6 +383,23 @@
       offlineBalanceInput.value = offlineBalance.toFixed(2);
     }
 
+    function transferWalletToChip(amount) {
+      if (amount > balance) return false;
+      const nextOfflineBalance = offlineBalance + amount;
+      if (nextOfflineBalance > maxOfflineBalance) return false;
+      saveBalance(balance - amount);
+      saveOfflineBalance(nextOfflineBalance);
+      return true;
+    }
+
+    function transferChipToWallet(amount) {
+      const nextBalance = balance + amount;
+      if (nextBalance > maxBalance) return false;
+      saveOfflineBalance(offlineBalance - amount);
+      saveBalance(nextBalance);
+      return true;
+    }
+
     balanceInput.value = balance.toFixed(2);
     offlineBalanceInput.value = offlineBalance.toFixed(2);
 
@@ -405,9 +422,23 @@
         showOfflineStatus("Saisissez un solde offline positif.", true);
         return;
       }
-      const limited = nextBalance > maxOfflineBalance;
-      saveOfflineBalance(limited ? maxOfflineBalance : nextBalance);
-      showOfflineStatus(limited ? "Votre puce ne peut exceder 300 euros." : `Puce e-euro offline modifiée à ${money(offlineBalance)}.`, limited);
+      if (nextBalance > maxOfflineBalance) {
+        offlineBalanceInput.value = offlineBalance.toFixed(2);
+        showOfflineStatus("Votre puce ne peut exceder 300 euros.", true);
+        return;
+      }
+      const difference = nextBalance - offlineBalance;
+      if (difference > 0 && !transferWalletToChip(difference)) {
+        offlineBalanceInput.value = offlineBalance.toFixed(2);
+        showOfflineStatus("Solde wallet insuffisant pour alimenter la puce.", true);
+        return;
+      }
+      if (difference < 0 && !transferChipToWallet(Math.abs(difference))) {
+        offlineBalanceInput.value = offlineBalance.toFixed(2);
+        showOfflineStatus("Le wallet ne peut exceder 3000 euros.", true);
+        return;
+      }
+      showOfflineStatus(difference >= 0 ? `Transfert vers la puce : ${money(difference)}.` : `Retour vers le wallet : ${money(Math.abs(difference))}.`);
     });
 
     document.querySelector("#topupForm").addEventListener("submit", event => {
@@ -443,20 +474,22 @@
         return;
       }
       offlineSubmitButton.disabled = true;
-      offlineSubmitButton.textContent = "Recharge offline en cours";
-      showOfflineStatus("Recharge de la puce e-euro offline");
+      offlineSubmitButton.textContent = "Transfert en cours";
+      showOfflineStatus("Transfert du wallet vers la puce e-euro offline");
 
       setTimeout(() => {
-        const nextBalance = offlineBalance + amount;
-        const limited = nextBalance > maxOfflineBalance;
-        saveOfflineBalance(limited ? maxOfflineBalance : nextBalance);
+        const transferred = transferWalletToChip(amount);
         offlineSubmitButton.disabled = false;
-        offlineSubmitButton.textContent = "Recharger la puce e-euro";
-        if (limited) {
+        offlineSubmitButton.textContent = "Transférer vers la puce";
+        if (!transferred && offlineBalance + amount > maxOfflineBalance) {
           showOfflineStatus("Votre puce ne peut exceder 300 euros.", true);
           return;
         }
-        showOfflineStatus(`Puce e-euro offline rechargée de ${money(amount)}.`);
+        if (!transferred) {
+          showOfflineStatus("Solde wallet insuffisant pour alimenter la puce.", true);
+          return;
+        }
+        showOfflineStatus(`Puce alimentée de ${money(amount)} depuis le wallet.`);
       }, 1200);
     });
   </script>
