@@ -154,6 +154,7 @@
     let acceptedQueued = false;
     let paymentRefused = false;
     let receiptVisible = false;
+    let validationTimer = null;
     const clientScreen = document.querySelector("#clientScreen");
     const merchantScreen = document.querySelector("#merchantScreen");
     const clientSupportLabel = document.querySelector("#clientSupportLabel");
@@ -275,7 +276,7 @@
         ${state.visual ? offlineVisual() : ""}
         ${offlineSettlementVisual()}
         <div class="card"><strong>${state.accepted ? s.ticket : title}</strong><p>${text}</p></div>
-        ${state.accepted || state.refused ? "" : `<div class="actions"><button class="primary next-arrow-button click-hint" type="button" data-action="next" aria-label="Continuer"><span class="click-arrow next-button-arrow" aria-hidden="true">→</span><span aria-hidden="true">→</span></button></div>`}
+        ${state.accepted || state.refused || step === 1 ? "" : `<div class="actions"><button class="primary next-arrow-button click-hint" type="button" data-action="next" aria-label="Continuer"><span class="click-arrow next-button-arrow" aria-hidden="true">→</span><span aria-hidden="true">→</span></button></div>`}
       `;
     }
 
@@ -331,6 +332,7 @@
       acceptedQueued = true;
     }
     function resetSaleFlow() {
+      clearTimeout(validationTimer);
       step = 0;
       acceptedQueued = false;
       paymentRefused = false;
@@ -347,6 +349,15 @@
       } else {
         step += 1;
         if (flowBase[step].accepted) queueAcceptedPayment();
+        if (step === 1) {
+          clearTimeout(validationTimer);
+          validationTimer = setTimeout(() => {
+            if (step !== 1 || paymentRefused) return;
+            step = flowBase.length - 1;
+            queueAcceptedPayment();
+            render();
+          }, 3000);
+        }
       }
       render();
     }
