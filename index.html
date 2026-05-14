@@ -26,15 +26,31 @@
     * { box-sizing: border-box; }
 
     body {
+      position: relative;
       margin: 0;
       min-height: 100vh;
-      background: linear-gradient(135deg, #08777f, #163f86);
+      overflow-x: hidden;
+      background: #0a6177;
       color: var(--ink);
+    }
+
+    body::before {
+      content: "";
+      position: fixed;
+      inset: 0;
+      z-index: 0;
+      background:
+        linear-gradient(135deg, rgba(8,119,127,.74), rgba(22,63,134,.82)),
+        url("magasin.png") center / cover no-repeat;
+      filter: saturate(.92);
+      pointer-events: none;
     }
 
     button { font: inherit; }
 
     main {
+      position: relative;
+      z-index: 1;
       width: min(1120px, calc(100% - 32px));
       margin: 0 auto;
       padding: 28px 0 34px;
