@@ -526,17 +526,12 @@
     }
 
     .brand-logo.transavia {
-      background: transparent;
-      padding: 0;
-      min-height: 0;
+      background: #00a86b;
+      color: #fff;
+      font-size: 17px;
     }
 
-    .transavia-logo {
-      display: block;
-      width: 178px;
-      max-width: 100%;
-      height: auto;
-    }
+    .brand-logo.transavia::first-letter { color: #d9f000; }
 
     .qr-amount {
       margin-bottom: 12px;
@@ -1035,7 +1030,7 @@
 
     function brandLogo(brand = sale.brand) {
       if (brand === "casino" || brand === "auchan") return `<div class="brand-logo casino" aria-label="Logo Casino"><img class="casino-logo" src="casino.png?v=2" alt="Casino" loading="eager"></div>`;
-      if (brand === "transavia") return `<div class="brand-logo transavia" aria-label="Logo Transavia"><img class="transavia-logo" src="Transavia_logo.png" alt="Transavia" loading="eager"></div>`;
+      if (brand === "transavia") return `<div class="brand-logo transavia" aria-label="Logo Transavia">transavia</div>`;
       return "";
     }
 
