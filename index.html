@@ -3,6 +3,9 @@
 <head>
   <meta charset="utf-8">
   <meta name="viewport" content="width=device-width, initial-scale=1">
+  <meta http-equiv="Cache-Control" content="no-store">
+  <meta http-equiv="Pragma" content="no-cache">
+  <meta http-equiv="Expires" content="0">
   <title>Projet PIE - EM grenoble - Mockup Euronumérique</title>
   <meta property="og:title" content="Projet PIE - EM grenoble - Mockup Euronumérique">
   <meta name="twitter:title" content="Projet PIE - EM grenoble - Mockup Euronumérique">
@@ -494,8 +497,8 @@
     }
 
     .brand-logo.casino {
-      background: #fff;
-      padding: 5px 10px;
+      background: transparent;
+      padding: 0;
     }
 
     .casino-logo {
@@ -969,7 +972,7 @@
     }
 
     function brandLogo(brand = sale.brand) {
-      if (brand === "casino") return `<div class="brand-logo casino" aria-label="Logo Casino"><img class="casino-logo" src="casino.png" alt="Casino" loading="eager"></div>`;
+      if (brand === "casino" || brand === "auchan") return `<div class="brand-logo casino" aria-label="Logo Casino"><img class="casino-logo" src="casino.png?v=2" alt="Casino" loading="eager"></div>`;
       if (brand === "transavia") return `<div class="brand-logo transavia" aria-label="Logo Transavia">transavia</div>`;
       return "";
     }
@@ -980,7 +983,7 @@
           return `
             <div class="qr-camera-shot ${guideStage === "scan" ? "click-hint" : ""}" data-action="scan-guide" aria-label="Vue caméra du client scannant le QR code du TPE">
               ${guideArrow("scan")}
-              <img class="qr-camera-photo" src="paiement-magasin-crop.png" alt="TPE affichant un QR code de paiement" loading="eager">
+              <img class="qr-camera-photo" src="paiement-magasin-nohead.png" alt="TPE affichant un QR code de paiement" loading="eager">
             </div>
           `;
         }
