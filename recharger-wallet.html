@@ -224,8 +224,13 @@
 
     .actions {
       display: grid;
-      grid-template-columns: 1fr 1fr;
+      grid-template-columns: 1fr;
       gap: 10px;
+    }
+
+    .actions button,
+    form > button {
+      width: 100%;
     }
 
     .top-actions {
@@ -278,7 +283,6 @@
     }
 
     @media (max-width: 460px) {
-      .actions { grid-template-columns: 1fr; }
       .amount { font-size: 42px; }
       .currency-symbol { font-size: 42px; }
     }
@@ -340,9 +344,9 @@
               <input id="offlineTopupAmount" name="offlineAmount" type="number" min="1" step="0.01" value="25" inputmode="decimal" required>
             </label>
             <div class="limit"><span>Plafond puce offline</span><strong>300 €</strong></div>
-            <p class="helper">(plafond non encore défini par la BCE)</p>
             <div class="status" id="offlineStatus" role="status" aria-live="polite"></div>
             <button id="offlineSubmitButton" type="submit">Transférer vers la puce</button>
+            <p class="helper">(plafond non encore défini par la BCE)</p>
           </form>
         </div>
       </div>
