@@ -33,6 +33,7 @@
     .click-hint { position:relative; }
     .click-arrow { position:absolute; z-index:5; color:#f5c542; font-size:28px; font-weight:950; line-height:1; text-shadow:0 2px 8px rgba(16,32,51,.25); animation:blinkArrow .82s ease-in-out infinite; pointer-events:none; }
     .click-arrow.down { left:50%; top:-32px; transform:translateX(-50%); }
+    .click-arrow.receipt-arrow { left:50%; top:calc(100% + 8px); transform:translateX(-50%) rotate(180deg); }
     .click-arrow.next-button-arrow { left:-38px; top:50%; transform:translateY(-50%); }
     .click-arrow.title-arrow { left:-48px; top:50%; color:#f5c542; font-size:42px; transform:translateY(-50%) rotate(-90deg); transform-origin:center; }
     .click-arrow.left { right:-34px; top:50%; transform:translateY(-50%); }
@@ -305,7 +306,7 @@
         <div class="${statusClass(state)}">${statusContent(state.merchantStatus)}</div>
         ${offlineSettlementVisual()}
         <div class="card"><strong>${state.merchantTitle}</strong><p>${state.merchantText}</p></div>
-        ${state.accepted && !receiptVisible ? `<button class="secondary receipt-action click-hint" type="button" data-action="generate-receipt"><span class="click-arrow down" aria-hidden="true">↓</span>Imprimer ticket de caisse</button>` : ""}
+        ${state.accepted && !receiptVisible ? `<button class="secondary receipt-action click-hint" type="button" data-action="generate-receipt"><span class="click-arrow receipt-arrow" aria-hidden="true">↓</span>Imprimer ticket de caisse</button>` : ""}
         ${receipt}
       `;
     }
