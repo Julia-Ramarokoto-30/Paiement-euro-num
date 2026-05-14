@@ -125,6 +125,83 @@
       align-items: start;
     }
 
+    .basket-banner {
+      margin: 0 0 18px;
+      padding: 14px;
+      border: 1px solid rgba(255,255,255,.32);
+      border-radius: 8px;
+      background: rgba(255,255,255,.94);
+      box-shadow: var(--shadow);
+    }
+
+    .basket-heading {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: 12px;
+      margin-bottom: 10px;
+    }
+
+    .basket-title {
+      display: inline-flex;
+      align-items: center;
+      gap: 8px;
+      color: var(--brand-dark);
+      font-size: 15px;
+      font-weight: 950;
+    }
+
+    .basket-icon {
+      display: inline-grid;
+      place-items: center;
+      width: 30px;
+      height: 30px;
+      border: 1px solid #e0b36b;
+      border-radius: 8px;
+      background: #fff4dc;
+      font-size: 18px;
+    }
+
+    .basket-total {
+      color: var(--brand-dark);
+      font-size: 18px;
+      font-weight: 950;
+      white-space: nowrap;
+    }
+
+    .basket-items {
+      display: grid;
+      grid-template-columns: repeat(4, minmax(0, 1fr));
+      gap: 8px;
+    }
+
+    .basket-item {
+      display: grid;
+      grid-template-columns: minmax(0, 1fr) auto;
+      gap: 8px;
+      align-items: center;
+      min-height: 42px;
+      padding: 9px 10px;
+      border: 1px solid var(--line);
+      border-radius: 8px;
+      background: #f8fbfd;
+      color: var(--ink);
+      font-size: 13px;
+      font-weight: 850;
+    }
+
+    .basket-item span:first-child {
+      overflow: hidden;
+      text-overflow: ellipsis;
+      white-space: nowrap;
+    }
+
+    .basket-item span:last-child {
+      color: var(--muted);
+      font-weight: 950;
+      white-space: nowrap;
+    }
+
     .device {
       overflow: hidden;
       border: 1px solid rgba(255,255,255,.28);
@@ -597,10 +674,17 @@
 
     @media (max-width: 900px) {
       header, .workspace { grid-template-columns: 1fr; }
+      .basket-items { grid-template-columns: 1fr 1fr; }
       .mode-switch { width: 100%; }
       .mode-switch button { min-width: 0; }
       .screen { min-height: auto; }
       .actions { grid-template-columns: 1fr; }
+    }
+
+    @media (max-width: 560px) {
+      .basket-heading { align-items: flex-start; flex-direction: column; }
+      .basket-items { grid-template-columns: 1fr; }
+      .basket-item span:first-child { white-space: normal; }
     }
   </style>
 </head>
@@ -620,6 +704,14 @@
         <a class="offline-link" href="offline.html">Mode hors ligne</a>
       </div>
     </header>
+
+    <section class="basket-banner" aria-label="Articles du panier">
+      <div class="basket-heading">
+        <div class="basket-title"><span class="basket-icon" aria-hidden="true">🧺</span><strong>Articles du panier</strong></div>
+        <div class="basket-total" id="basketTotal"></div>
+      </div>
+      <div class="basket-items" id="basketItems"></div>
+    </section>
 
     <section class="workspace" aria-label="Mockup paiement euro numérique">
       <article class="device" aria-label="Écran client">
@@ -767,6 +859,8 @@
 
     const clientScreen = document.querySelector("#clientScreen");
     const merchantScreen = document.querySelector("#merchantScreen");
+    const basketItems = document.querySelector("#basketItems");
+    const basketTotal = document.querySelector("#basketTotal");
     const money = value => value.toLocaleString("fr-FR", { style: "currency", currency: "EUR" });
 
     function getWalletBalance() {
@@ -880,6 +974,13 @@
         `;
       }
       return "";
+    }
+
+    function renderBasket() {
+      basketTotal.textContent = money(sale.amount);
+      basketItems.innerHTML = sale.items
+        .map(item => `<div class="basket-item"><span>${item.name}</span><span>${money(item.price)}</span></div>`)
+        .join("");
     }
 
     function renderClient() {
@@ -1028,6 +1129,7 @@
 
     function render() {
       renderModeButtons();
+      renderBasket();
       renderClient();
       renderMerchant();
     }
