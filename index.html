@@ -560,6 +560,12 @@
       object-position: center;
     }
 
+    .payment-fallback {
+      display: flex;
+      justify-content: flex-end;
+      margin-top: 10px;
+    }
+
     .nfc-visual {
       display: grid;
       place-items: center;
@@ -985,6 +991,9 @@
               ${guideArrow("scan")}
               <img class="qr-camera-photo" src="paiement-magasin-nohead.png" alt="TPE affichant un QR code de paiement" loading="eager">
             </div>
+            <div class="payment-fallback">
+              <button class="primary next-arrow-button" type="button" data-action="simulate-scan" aria-label="Continuer sans téléphone"><span aria-hidden="true">→</span></button>
+            </div>
           `;
         }
         return `
@@ -999,6 +1008,7 @@
             <div class="nfc-symbol">NFC</div>
             <strong>Prêt au sans contact</strong>
           </div>
+          ${side === "client" ? `<div class="payment-fallback"><button class="primary next-arrow-button" type="button" data-action="simulate-nfc" aria-label="Continuer le paiement NFC"><span aria-hidden="true">→</span></button></div>` : ""}
         `;
       }
       return "";
@@ -1135,19 +1145,20 @@
     }
 
     function showSettlementThenAccept(accepted) {
-      if (settlementInProgress || step >= flows.qr.length - 1) return;
+      const settlementMode = mode;
+      if (settlementInProgress || step >= flows[settlementMode].length - 1) return;
       settlementInProgress = true;
       step = 1;
       render();
       clearTimeout(settlementTimer);
       settlementTimer = setTimeout(() => {
-        if (mode !== "qr") return;
+        if (mode !== settlementMode) return;
         settlementInProgress = false;
         if (!accepted) {
           paymentRefused = true;
-          step = flows.qr.length - 1;
+          step = flows[settlementMode].length - 1;
         } else {
-          step = flows.qr.length - 1;
+          step = flows[settlementMode].length - 1;
           debitWalletForAcceptedSale();
         }
         setGuideStage("receipt");
@@ -1171,6 +1182,16 @@
           setGuideStage("continue");
           render();
         }
+        return;
+      }
+      if (action === "simulate-scan") {
+        setGuideStage("continue");
+        showSettlementThenAccept(true);
+        return;
+      }
+      if (action === "simulate-nfc") {
+        setGuideStage("continue");
+        showSettlementThenAccept(true);
         return;
       }
       if (action === "next") next();
