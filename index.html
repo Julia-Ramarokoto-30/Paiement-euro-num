@@ -556,6 +556,16 @@
       text-align: center;
     }
 
+    .qr-origin-note {
+      max-width: 340px;
+      margin: 10px auto 0;
+      color: var(--muted);
+      font-size: 12px;
+      font-weight: 800;
+      line-height: 1.45;
+      text-align: center;
+    }
+
     .qr-camera-shot {
       position: relative;
       display: grid;
@@ -1019,6 +1029,7 @@
         return `
           <div class="qr-box">
             <img src="${qrUrl}" alt="QR code e-EUR affiché sur le TPE" loading="eager">
+            <p class="qr-origin-note">QR code généré automatiquement par la caisse après scan des articles, ou généré après saisie manuelle du montant dans le TPE par le vendeur.</p>
           </div>
         `;
       }

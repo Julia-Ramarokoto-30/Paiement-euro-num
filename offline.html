@@ -96,6 +96,7 @@
     .offline-amount { color:var(--brand-dark); font-size:22px; font-weight:950; text-align:right; white-space:nowrap; }
     .clear-offline { grid-column:1 / -1; min-height:38px; border:1px solid var(--brand); border-radius:8px; background:#fff; color:var(--brand-dark); cursor:pointer; font-weight:900; }
     .clear-offline:disabled { border-color:#b7d7dc; color:#6d9299; cursor:not-allowed; opacity:.7; }
+    .offline-sync-note { grid-column:1 / -1; margin:0; color:#1f5560; font-size:12px; font-weight:700; line-height:1.4; }
     .ticket { display:grid; gap:9px; margin-top:14px; padding:14px; border:1px dashed #9aa8b7; border-radius:8px; background:#fff; font-family:ui-monospace,SFMono-Regular,Menlo,Consolas,monospace; font-size:13px; color:#344054; }
     .ticket-row { display:flex; justify-content:space-between; gap:12px; }
     .receipt-header { display:grid; gap:6px; padding-bottom:10px; border-bottom:1px dashed #9aa8b7; }
@@ -122,7 +123,7 @@
           <img class="project-logo" src="WL-blanc.png" alt="Worldline">
         </div>
         <h1>Paiement hors ligne</h1>
-        <p class="lede">Simulation e-EUR hors ligne : le client présente un téléphone NFC ou une smart card au TPE, puis la vente est synchronisée plus tard.</p>
+        <p class="lede">Simulation e-EUR hors ligne : le client présente un téléphone NFC ou une smart card physique au TPE, puis la vente est synchronisée plus tard.</p>
         <div class="support-switch" aria-label="Support de paiement hors ligne">
           <button class="active" type="button" data-support="phone">Téléphone NFC</button>
           <button type="button" data-support="card">Smart card</button>
@@ -312,7 +313,7 @@
       ` : "";
       merchantScreen.innerHTML = `
         <div class="merchant-total">${brandLogo()}<div class="label">Montant</div><div class="amount">${money(sale.amount)}</div></div>
-        <div class="offline-sync" aria-label="Ventes offline en attente de synchronisation"><div><span>File offline TPE</span><strong>${offlinePending.count} vente${offlinePending.count > 1 ? "s" : ""} à synchroniser</strong><em>${offlinePending.count === 0 ? transferMessage : state.accepted ? "Paiement ajouté à la file locale" : "Connexion réseau indisponible"}</em></div><div class="offline-amount">${money(offlinePending.amount)}</div><button class="clear-offline" type="button" data-action="clear-offline" ${offlinePending.count === 0 ? "disabled" : ""}>Vider les transactions offline</button></div>
+        <div class="offline-sync" aria-label="Ventes offline en attente de synchronisation"><div><span>File offline TPE</span><strong>${offlinePending.count} vente${offlinePending.count > 1 ? "s" : ""} à synchroniser</strong><em>${offlinePending.count === 0 ? transferMessage : state.accepted ? "Paiement ajouté à la file locale" : "Connexion réseau indisponible"}</em></div><div class="offline-amount">${money(offlinePending.amount)}</div><button class="clear-offline" type="button" data-action="clear-offline" ${offlinePending.count === 0 ? "disabled" : ""}>Vider les transactions offline</button><p class="offline-sync-note">Les transactions en file d'attente sont transférées à AXIS une fois que l'avion atterrit et retrouve la connexion internet, d'où le vidage.</p></div>
         <div class="${statusClass(state)}">${statusContent(state.merchantStatus)}</div>
         ${offlineSettlementVisual()}
         <div class="card"><strong>${state.merchantTitle}</strong><p>${state.merchantText}</p></div>
