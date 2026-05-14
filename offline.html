@@ -305,7 +305,7 @@
         <div class="${statusClass(state)}">${statusContent(state.merchantStatus)}</div>
         ${offlineSettlementVisual()}
         <div class="card"><strong>${state.merchantTitle}</strong><p>${state.merchantText}</p></div>
-        ${state.accepted ? `<button class="secondary receipt-action ${receiptVisible ? "" : "click-hint"}" type="button" data-action="generate-receipt">${receiptVisible ? "" : `<span class="click-arrow down" aria-hidden="true">↓</span>`}${receiptVisible ? "Masquer le ticket de caisse" : "Imprimer ticket de caisse"}</button>` : ""}
+        ${state.accepted && !receiptVisible ? `<button class="secondary receipt-action click-hint" type="button" data-action="generate-receipt"><span class="click-arrow down" aria-hidden="true">↓</span>Imprimer ticket de caisse</button>` : ""}
         ${receipt}
       `;
     }
@@ -366,7 +366,7 @@
       if (action === "next") next();
       if (action === "clear-offline") clearOfflineTransactions();
       if (action === "generate-receipt") {
-        receiptVisible = !receiptVisible;
+        receiptVisible = true;
         render();
       }
     });

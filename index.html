@@ -1025,6 +1025,7 @@
       const state = current();
       const balance = getWalletBalance();
       const nextButtonLabel = state.refused ? "Nouvel achat" : state.accepted ? "Nouvel achat" : "Continuer";
+      const showClientNextArrow = state.refused || (state.accepted && guideStage === "done");
       clientScreen.innerHTML = `
         <div class="wallet-card">
           <div class="label">Wallet euro numérique</div>
@@ -1039,14 +1040,14 @@
           <strong>${state.clientTitle}</strong>
           ${state.clientText ? `<p>${state.clientText}</p>` : ""}
         </div>` : ""}
-        ${state.accepted || state.refused ? `<div class="actions"><button class="primary next-arrow-button click-hint" type="button" data-action="next" aria-label="${nextButtonLabel}"><span class="click-arrow action-arrow" aria-hidden="true">↓</span><span aria-hidden="true">→</span></button></div>` : ""}
+        ${state.accepted || state.refused ? `<div class="actions"><button class="primary next-arrow-button ${showClientNextArrow ? "click-hint" : ""}" type="button" data-action="next" aria-label="${nextButtonLabel}">${showClientNextArrow ? `<span class="click-arrow action-arrow" aria-hidden="true">↓</span>` : ""}<span aria-hidden="true">→</span></button></div>` : ""}
       `;
     }
 
     function renderMerchant() {
       const state = current();
       const nextButtonLabel = state.refused ? "Nouvel achat" : state.accepted ? "Nouvel achat" : "Continuer";
-      const showReceiptArrow = mode === "qr" && guideStage === "receipt" && state.accepted && !receiptVisible;
+      const showReceiptArrow = guideStage === "receipt" && state.accepted && !receiptVisible;
       const ticketItems = sale.items
         .map(item => `<div class="ticket-row"><span>${item.name}</span><strong>${money(item.price)}</strong></div>`)
         .join("");
@@ -1077,8 +1078,8 @@
           <strong>${state.merchantTitle}</strong>
           <p>${state.merchantText}</p>
         </div>` : ""}
-        ${state.accepted ? `
-          <button class="secondary receipt-action ${showReceiptArrow ? "click-hint" : ""}" type="button" data-action="generate-receipt">${showReceiptArrow ? guideArrow("receipt", "action") : ""}${receiptVisible ? "Masquer le ticket de caisse" : "Imprimer ticket de caisse"}</button>
+        ${state.accepted && !receiptVisible ? `
+          <button class="secondary receipt-action ${showReceiptArrow ? "click-hint" : ""}" type="button" data-action="generate-receipt">${showReceiptArrow ? guideArrow("receipt", "action") : ""}Imprimer ticket de caisse</button>
         ` : ""}
         ${receipt}
       `;
@@ -1197,8 +1198,8 @@
       if (action === "next") next();
       if (action === "back") back();
       if (action === "generate-receipt") {
-        receiptVisible = !receiptVisible;
-        if (receiptVisible && guideStage === "receipt") setGuideStage("done");
+        receiptVisible = true;
+        if (guideStage === "receipt") setGuideStage("done");
         render();
       }
     });
