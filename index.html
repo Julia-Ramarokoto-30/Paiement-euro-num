@@ -3,13 +3,11 @@
 <head>
   <meta charset="utf-8">
   <meta name="viewport" content="width=device-width, initial-scale=1">
-  <meta http-equiv="Cache-Control" content="no-store">
-  <meta http-equiv="Pragma" content="no-cache">
-  <meta http-equiv="Expires" content="0">
   <title>Projet PIE - EM grenoble - Mockup Euronumérique</title>
   <meta property="og:title" content="Projet PIE - EM grenoble - Mockup Euronumérique">
   <meta name="twitter:title" content="Projet PIE - EM grenoble - Mockup Euronumérique">
-  <link rel="preload" as="image" href="magasin-bg.jpg">
+  <link rel="preload" as="image" href="magasin-bg-fast.jpg">
+  <link rel="preload" as="image" href="paiement-magasin-light-fast.jpg">
   <style>
     :root {
       color-scheme: light;
@@ -45,7 +43,7 @@
       z-index: 0;
       background:
         linear-gradient(135deg, rgba(8,119,127,.74), rgba(22,63,134,.82)),
-        url("magasin-bg.jpg") center / cover no-repeat;
+        url("magasin-bg-fast.jpg") center / cover no-repeat;
       filter: saturate(.92);
       pointer-events: none;
     }
@@ -995,7 +993,7 @@
           return `
             <div class="qr-camera-shot ${guideStage === "scan" ? "click-hint" : ""}" data-action="scan-guide" aria-label="Vue caméra du client scannant le QR code du TPE">
               ${guideArrow("scan")}
-              <img class="qr-camera-photo" src="paiement-magasin-light.png" alt="TPE affichant un QR code de paiement" loading="eager">
+              <img class="qr-camera-photo" src="paiement-magasin-light-fast.jpg" alt="TPE affichant un QR code de paiement" loading="eager" decoding="async" fetchpriority="high">
             </div>
             <div class="payment-fallback">
               <button class="primary next-arrow-button" type="button" data-action="simulate-scan" aria-label="Continuer sans téléphone"><span aria-hidden="true">→</span></button>
