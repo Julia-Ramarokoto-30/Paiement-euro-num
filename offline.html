@@ -37,9 +37,9 @@
     .click-arrow.left { right:-34px; top:50%; transform:translateY(-50%); }
     @keyframes blinkArrow { 0%,100% { opacity:.18; } 50% { opacity:1; } }
     .workspace { display:grid; grid-template-columns:1fr 1fr; gap:18px; align-items:start; }
-    .device { overflow:hidden; border:1px solid rgba(255,255,255,.28); border-radius:8px; background:var(--panel); box-shadow:var(--shadow); }
-    .device-top { display:flex; justify-content:space-between; gap:10px; padding:13px 16px; border-bottom:1px solid var(--line); color:var(--muted); font-size:12px; font-weight:900; text-transform:uppercase; }
-    .screen { min-height:660px; padding:18px; background:linear-gradient(#fff,#f8fbfd); }
+    .device { overflow:hidden; border:1px solid rgba(255,255,255,.28); border-radius:8px; background:rgba(255,255,255,.16); backdrop-filter:blur(14px); box-shadow:var(--shadow); }
+    .device-top { display:flex; justify-content:space-between; gap:10px; padding:13px 16px; border-bottom:1px solid rgba(255,255,255,.28); color:rgba(255,255,255,.86); font-size:12px; font-weight:900; text-transform:uppercase; }
+    .screen { min-height:660px; padding:18px; background:rgba(255,255,255,.72); }
     .label { margin-bottom:6px; color:var(--muted); font-size:11px; font-weight:900; letter-spacing:.08em; text-transform:uppercase; }
     .product-picker .label { color:#fff; }
     .wallet-card { padding:16px; border-radius:8px; background:#102033; color:#fff; }
