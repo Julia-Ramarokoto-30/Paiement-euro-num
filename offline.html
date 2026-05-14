@@ -21,10 +21,10 @@
     .support-switch button { min-height:38px; min-width:132px; padding:8px 12px; border:0; border-radius:7px; background:transparent; color:rgba(255,255,255,.82); cursor:pointer; font-weight:900; }
     .support-switch button.active { background:#fff; color:var(--brand-dark); }
     .demo-guide { display:grid; gap:12px; margin:0 0 18px; }
-    .articles-zone { padding:14px; border:1px solid rgba(255,255,255,.32); border-radius:8px; background:rgba(255,255,255,.92); box-shadow:var(--shadow); }
+    .articles-zone { padding:14px; border:1px solid rgba(255,255,255,.32); border-radius:8px; background:rgba(255,255,255,.16); backdrop-filter:blur(14px); box-shadow:var(--shadow); }
     .guide-title { display:flex; align-items:center; justify-content:space-between; gap:12px; margin-bottom:8px; }
-    .guide-title strong { color:var(--brand-dark); font-size:15px; }
-    .guide-title span { color:var(--muted); font-size:12px; font-weight:800; }
+    .guide-title strong { color:#fff; font-size:15px; }
+    .guide-title span { color:rgba(255,255,255,.82); font-size:12px; font-weight:800; }
     .flow-bubbles { display:block; }
     .flow-bubble { position:relative; min-height:72px; padding:13px 14px 13px 44px; border:1px solid #89d6d7; border-radius:8px; background:#f2fbfb; color:#1f5560; font-size:14px; line-height:1.42; box-shadow:0 8px 22px rgba(13,35,58,.07); }
     .flow-bubble::before { content:""; position:absolute; left:18px; top:21px; width:12px; height:12px; border-radius:50%; background:var(--brand); box-shadow:0 0 0 6px rgba(0,119,129,.14); }
@@ -72,11 +72,11 @@
     .card { margin-top:12px; padding:14px; border:1px solid var(--line); border-radius:8px; background:#fff; }
     .card strong { display:block; margin-bottom:5px; font-size:15px; }
     .card p { margin:0; color:#455468; line-height:1.45; }
-    .product-picker { display:grid; gap:8px; margin-top:12px; padding:14px; border:1px solid var(--line); border-radius:8px; background:#fff; }
-    .demo-guide .product-picker { margin-top:0; padding:12px; background:#f8fbfd; }
-    .product-picker button { display:grid; grid-template-columns:1fr auto; gap:10px; align-items:center; min-height:42px; padding:9px 10px; border:1px solid var(--brand); border-radius:8px; background:#e8f7f1; color:var(--brand-dark); cursor:pointer; font-weight:900; text-align:left; }
-    .product-picker button.active { border-color:var(--brand); background:#e8f7f1; color:var(--brand-dark); }
-    .product-picker span { color:var(--brand-dark); font-weight:900; white-space:nowrap; }
+    .product-picker { display:grid; gap:8px; margin-top:12px; padding:14px; border:1px solid rgba(255,255,255,.32); border-radius:8px; background:rgba(255,255,255,.12); }
+    .demo-guide .product-picker { margin-top:0; padding:12px; background:rgba(255,255,255,.12); }
+    .product-picker button { display:grid; grid-template-columns:1fr auto; gap:10px; align-items:center; min-height:42px; padding:9px 10px; border:1px solid rgba(255,255,255,.68); border-radius:8px; background:rgba(232,247,241,.46); color:#fff; cursor:pointer; font-weight:900; text-align:left; }
+    .product-picker button.active { border-color:rgba(255,255,255,.9); background:rgba(232,247,241,.56); color:#fff; }
+    .product-picker span { color:#fff; font-weight:900; white-space:nowrap; }
     .product-picker .click-arrow { color:#f5c542; }
     .sale-summary { display:grid; grid-template-columns:1fr auto; gap:10px; align-items:center; min-height:58px; padding:12px; border:1px solid var(--line); border-radius:8px; background:#f8fbfd; }
     .sale-summary strong { display:block; color:var(--ink); font-size:14px; }
