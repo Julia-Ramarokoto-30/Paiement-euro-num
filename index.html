@@ -76,7 +76,6 @@
 
     .project-kicker {
       width: fit-content;
-      margin-bottom: 10px;
       padding: 4px 7px;
       border: 2px solid rgba(255,255,255,.28);
       border-radius: 6px;
@@ -84,6 +83,20 @@
       font-size: 11px;
       font-weight: 800;
       letter-spacing: 0;
+    }
+
+    .project-brand {
+      display: flex;
+      align-items: center;
+      gap: 10px;
+      margin-bottom: 10px;
+    }
+
+    .project-logo {
+      display: block;
+      width: auto;
+      height: 18px;
+      opacity: .92;
     }
 
     .lede {
@@ -731,7 +744,10 @@
   <main>
     <header>
       <div>
-        <div class="project-kicker">Projet PIE 2026 - EM Grenoble</div>
+        <div class="project-brand">
+          <div class="project-kicker">Projet PIE 2026 - EM Grenoble</div>
+          <img class="project-logo" src="WL-blanc.png" alt="Worldline">
+        </div>
         <h1>Paiement en euro numérique</h1>
       </div>
       <div>
