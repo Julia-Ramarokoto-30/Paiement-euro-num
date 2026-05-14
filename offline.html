@@ -96,11 +96,12 @@
     .receipt-header span { color:var(--brand-dark); font-weight:950; text-transform:uppercase; }
     .receipt-total { margin-top:4px; padding-top:10px; border-top:1px dashed #9aa8b7; font-weight:950; }
     .receipt-action { width:100%; margin-top:14px; }
-    .actions { display:grid; grid-template-columns:1fr 1fr; gap:10px; margin-top:14px; }
+    .actions { display:flex; justify-content:flex-end; gap:10px; margin-top:14px; }
     .primary,.secondary { min-height:46px; border-radius:8px; cursor:pointer; font-weight:900; }
     .primary { border:0; background:var(--brand); color:#fff; }
     .secondary { border:1px solid var(--line); background:#fff; color:var(--brand-dark); }
-    @media (max-width:900px) { header,.workspace { grid-template-columns:1fr; } .support-switch { width:100%; } .support-switch button { min-width:0; } .screen { min-height:auto; } .actions { grid-template-columns:1fr; } }
+    .next-arrow-button { width:58px; min-height:50px; padding:0; font-size:28px; line-height:1; }
+    @media (max-width:900px) { header,.workspace { grid-template-columns:1fr; } .support-switch { width:100%; } .support-switch button { min-width:0; } .screen { min-height:auto; } }
     @media (max-width:560px) { .flow-bubble { padding-left:36px; } .click-arrow.left { right:8px; top:-32px; transform:none; } .click-arrow.title-arrow { left:-30px; font-size:36px; } }
   </style>
 </head>
@@ -264,14 +265,13 @@
       const balance = getOfflineBalance();
       const title = state.title || s.title;
       const text = state.accepted ? `Montant réglé : ${money(sale.amount)}` : state.text || (step === 0 ? s.intro : s.progress);
-      const nextButtonLabel = state.refused || state.accepted ? "Nouvelle vente" : "Continuer";
       clientScreen.innerHTML = `
         <div class="wallet-card"><div class="label">Solde puce e-euro offline</div><div class="amount">${money(balance)}</div><div>Support : ${s.label}</div></div>
         <div class="${statusClass(state)}">${statusContent(state.clientStatus)}</div>
         ${state.visual ? offlineVisual() : ""}
         ${offlineSettlementVisual()}
         <div class="card"><strong>${state.accepted ? s.ticket : title}</strong><p>${text}</p></div>
-        ${state.accepted || state.refused ? "" : `<div class="actions"><button class="secondary" type="button" data-action="back">Retour</button><button class="primary click-hint" type="button" data-action="next"><span class="click-arrow down" aria-hidden="true">↓</span>${nextButtonLabel}</button></div>`}
+        ${state.accepted || state.refused ? "" : `<div class="actions"><button class="primary next-arrow-button click-hint" type="button" data-action="next" aria-label="Continuer"><span class="click-arrow down" aria-hidden="true">↓</span><span aria-hidden="true">→</span></button></div>`}
       `;
     }
 
@@ -346,15 +346,6 @@
       }
       render();
     }
-    function back() {
-      if (paymentRefused) {
-        resetSaleFlow();
-        render();
-        return;
-      }
-      step = Math.max(0, step - 1);
-      render();
-    }
     function setSupport(nextSupport) { support = nextSupport; resetSaleFlow(); render(); }
     function clearOfflineTransactions() {
       lastOfflineTransfer.count = offlinePending.count;
@@ -370,7 +361,6 @@
       if (saleButton) selectSale(Number(saleButton.dataset.saleIndex));
       const action = event.target.closest("[data-action]")?.dataset.action;
       if (action === "next") next();
-      if (action === "back") back();
       if (action === "clear-offline") clearOfflineTransactions();
       if (action === "generate-receipt") {
         receiptVisible = !receiptVisible;
