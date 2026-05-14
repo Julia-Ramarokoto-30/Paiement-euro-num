@@ -446,87 +446,18 @@
       place-items: center;
       min-height: 330px;
       margin: 14px 0;
-      padding: 18px;
+      padding: 0;
       overflow: hidden;
       border: 1px solid var(--line);
       border-radius: 8px;
-      background:
-        radial-gradient(circle at 50% 18%, rgba(255,255,255,.34), transparent 26%),
-        linear-gradient(145deg, #eef3f6, #adb8c0 42%, #6f7a83);
+      background: #111820;
     }
 
-    .qr-camera-frame {
-      position: relative;
-      width: min(100%, 360px);
-      aspect-ratio: 1.22;
-      overflow: hidden;
-      padding: 22px 18px 18px;
-      border: 10px solid #202a35;
-      border-radius: 14px;
-      background: #202a35;
-      box-shadow: 0 24px 44px rgba(16, 32, 51, .28);
-      transform: perspective(820px) rotateX(2deg) rotateZ(-1deg);
-    }
-
-    .qr-camera-frame::before {
-      content: "TPE";
-      position: absolute;
-      left: 18px;
-      top: 7px;
-      color: rgba(255,255,255,.68);
-      font-size: 10px;
-      font-weight: 950;
-      letter-spacing: .12em;
-    }
-
-    .qr-camera-frame::after {
-      content: "";
-      position: absolute;
-      right: 18px;
-      top: 9px;
-      width: 42px;
-      height: 5px;
-      border-radius: 999px;
-      background: rgba(255,255,255,.28);
-    }
-
-    .qr-camera-view {
-      position: relative;
-      width: 100%;
-      height: 100%;
-      overflow: hidden;
-      border-radius: 5px;
-      background:
-        linear-gradient(180deg, rgba(0,119,129,.08), transparent 32%),
-        radial-gradient(circle at 50% 45%, #fff 0 43%, #eef3f6 100%);
-      box-shadow: inset 0 0 0 1px rgba(16, 32, 51, .13);
-    }
-
-    .qr-tpe-photo {
-      position: absolute;
-      left: 50%;
-      top: 46%;
-      width: min(80%, 250px);
-      padding: 14px;
-      border-radius: 4px;
-      background: #fff;
-      box-shadow: 0 10px 28px rgba(16, 32, 51, .16);
-      transform: translate(-50%, -50%);
-    }
-
-    .qr-tpe-screen {
-      display: grid;
-      place-items: center;
-      padding: 0;
-      border-radius: 2px;
-      background: #fff;
-    }
-
-    .qr-tpe-screen img {
+    .qr-camera-photo {
       display: block;
       width: 100%;
-      aspect-ratio: 1;
-      image-rendering: pixelated;
+      height: 360px;
+      object-fit: cover;
     }
 
     .qr-scan-corners {
@@ -957,16 +888,8 @@
           return `
             <div class="qr-camera-shot ${guideStage === "scan" ? "click-hint" : ""}" data-action="scan-guide" aria-label="Vue caméra du client scannant le QR code du TPE">
               ${guideArrow("scan")}
-              <div class="qr-camera-frame">
-                <div class="qr-camera-view">
-                  <div class="qr-tpe-photo">
-                    <div class="qr-tpe-screen">
-                      <img src="${qrUrl}" alt="QR code e-EUR affiché sur le TPE" loading="eager">
-                    </div>
-                  </div>
-                  <div class="qr-scan-corners" aria-hidden="true"></div>
-                </div>
-              </div>
+              <img class="qr-camera-photo" src="WhatsApp Image 2026-05-14 at 09.44.57.jpeg" alt="TPE affichant un QR code de paiement" loading="eager">
+              <div class="qr-scan-corners" aria-hidden="true"></div>
             </div>
           `;
         }
@@ -999,7 +922,7 @@
           <a class="wallet-action ${guideStage === "wallet" ? "click-hint" : ""}" href="recharger-wallet.html">${guideArrow("wallet", "wallet")}Gérer mon wallet</a>
         </div>
         ${state.clientStatus ? `<div class="${scanStatusClass(state)}"><span class="status-text">${statusContent(state.clientStatus)}${statusGuideArrow()}</span></div>` : ""}
-        ${(mode === "qr" && state.showQrClient) || (mode === "nfc" && state.showNfcClient) ? "" : paymentVisual(state, "client")}
+        ${paymentVisual(state, "client")}
         ${settlementVisual()}
         ${state.clientTitle || state.clientText ? `<div class="card">
           <strong>${state.clientTitle}</strong>
