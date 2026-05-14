@@ -311,6 +311,12 @@
       transform: translateY(-50%);
     }
 
+    .click-arrow.action-arrow {
+      left: -34px;
+      top: 50%;
+      transform: translateY(-50%) rotate(-90deg);
+    }
+
     .click-arrow.wallet-arrow {
       right: -34px;
       top: 50%;
@@ -643,8 +649,8 @@
     }
 
     .actions {
-      display: grid;
-      grid-template-columns: 1fr 1fr;
+      display: flex;
+      justify-content: flex-end;
       gap: 10px;
       margin-top: 14px;
     }
@@ -668,13 +674,20 @@
       color: var(--brand-dark);
     }
 
+    .next-arrow-button {
+      width: 58px;
+      min-height: 50px;
+      padding: 0;
+      font-size: 28px;
+      line-height: 1;
+    }
+
     @media (max-width: 900px) {
       header, .workspace { grid-template-columns: 1fr; }
       .basket-items { grid-template-columns: 1fr 1fr; }
       .mode-switch { width: 100%; }
       .mode-switch button { min-width: 0; }
       .screen { min-height: auto; }
-      .actions { grid-template-columns: 1fr; }
     }
 
     @media (max-width: 560px) {
@@ -922,7 +935,7 @@
     }
 
     function guideArrow(target, variant = "down") {
-      const arrowClass = variant === "wallet" ? "wallet-arrow" : variant === "bubble" ? "bubble-arrow" : "down";
+      const arrowClass = variant === "wallet" ? "wallet-arrow" : variant === "bubble" ? "bubble-arrow" : variant === "action" ? "action-arrow" : "down";
       return (mode === "qr" || mode === "nfc") && guideStage === target ? `<span class="click-arrow ${arrowClass}" aria-hidden="true">↓</span>` : "";
     }
 
@@ -996,7 +1009,7 @@
           <strong>${state.clientTitle}</strong>
           ${state.clientText ? `<p>${state.clientText}</p>` : ""}
         </div>` : ""}
-        ${state.accepted || state.refused ? `<div class="actions"><button class="primary" type="button" data-action="next">${nextButtonLabel}</button></div>` : ""}
+        ${state.accepted || state.refused ? `<div class="actions"><button class="primary next-arrow-button click-hint" type="button" data-action="next" aria-label="${nextButtonLabel}"><span class="click-arrow action-arrow" aria-hidden="true">↓</span><span aria-hidden="true">→</span></button></div>` : ""}
       `;
     }
 
@@ -1035,7 +1048,7 @@
           <p>${state.merchantText}</p>
         </div>` : ""}
         ${state.accepted ? `
-          <button class="secondary receipt-action ${showReceiptArrow ? "click-hint" : ""}" type="button" data-action="generate-receipt">${showReceiptArrow ? guideArrow("receipt") : ""}${receiptVisible ? "Masquer le ticket de caisse" : "Imprimer ticket de caisse"}</button>
+          <button class="secondary receipt-action ${showReceiptArrow ? "click-hint" : ""}" type="button" data-action="generate-receipt">${showReceiptArrow ? guideArrow("receipt", "action") : ""}${receiptVisible ? "Masquer le ticket de caisse" : "Imprimer ticket de caisse"}</button>
         ` : ""}
         ${receipt}
       `;
