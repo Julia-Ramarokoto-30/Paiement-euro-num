@@ -133,8 +133,8 @@
     </header>
     <section class="demo-guide" id="demoGuide" aria-label="Guide de parcours hors ligne"></section>
     <section class="workspace" aria-label="Mockup paiement euro numérique hors ligne">
-      <article class="device" aria-label="Écran client"><div class="device-top"><span>Client</span><span id="clientSupportLabel">Téléphone NFC</span></div><div class="screen" id="clientScreen"></div></article>
-      <article class="device" aria-label="Écran commerçant"><div class="device-top"><span>Commerçant</span><span>TPE offline</span></div><div class="screen" id="merchantScreen"></div></article>
+      <article class="device" aria-label="Écran client"><div class="device-top"><span>Client</span></div><div class="screen" id="clientScreen"></div></article>
+      <article class="device" aria-label="Écran commerçant"><div class="device-top"><span>Commerçant</span></div><div class="screen" id="merchantScreen"></div></article>
     </section>
   </main>
   <script>
@@ -165,7 +165,6 @@
     let validationTimer = null;
     const clientScreen = document.querySelector("#clientScreen");
     const merchantScreen = document.querySelector("#merchantScreen");
-    const clientSupportLabel = document.querySelector("#clientSupportLabel");
     const demoGuide = document.querySelector("#demoGuide");
     const money = value => value.toLocaleString("fr-FR", { style:"currency", currency:"EUR" });
     function current() {
@@ -324,7 +323,6 @@
 
     function renderSupportButtons() {
       document.querySelectorAll("[data-support]").forEach(button => button.classList.toggle("active", button.dataset.support === support));
-      clientSupportLabel.textContent = currentSupport().label;
     }
     function render() { renderSupportButtons(); renderGuide(); renderClient(); renderMerchant(); }
     function queueAcceptedPayment() {
