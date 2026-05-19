@@ -136,12 +136,14 @@
       border-radius: 0;
       background: transparent;
       color: #fff;
+      appearance: textfield;
+      -moz-appearance: textfield;
     }
 
     .balance-input::-webkit-inner-spin-button,
     .balance-input::-webkit-outer-spin-button {
-      opacity: 1;
-      filter: invert(1) brightness(2);
+      -webkit-appearance: none;
+      margin: 0;
     }
 
     .balance-input:focus {
